@@ -1,0 +1,21 @@
+# Logs
+logs
+*.log
+npm-debug.log
+
+# Dependency directory
+# https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
+node_modules
+
+#OS STUFF
+.DS_Store
+.tmp
+
+# Elm
+# elm-package generated files
+elm-stuff
+# elm-repl generated files
+repl-temp-*
+
+# Build
+dist

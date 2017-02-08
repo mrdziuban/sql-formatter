@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [ -e .gen-dist ]; then
+  rm .gen-dist
+  npm run dist
+  git add bundle.js
+  git commit --amend -C HEAD --no-verify
+fi
+
+exit 0

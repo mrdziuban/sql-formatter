@@ -1,0 +1,25 @@
+{
+  "name": "sql-formatter",
+  "version": "0.0.1",
+  "description": "SQL Formatter",
+  "author": "Matt Dziuban",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "compile": "webpack --progress",
+    "dev": "webpack-dev-server",
+    "dist": "webpack --progress --env.production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mrdziuban/sql-formatter"
+  },
+  "devDependencies": {
+    "elm": "^0.18.0",
+    "elm-webpack-loader": "^4.2.0",
+    "webpack": "^2.2.1",
+    "webpack-dev-server": "^2.3.0",
+    "webpack-merge": "^2.6.1"
+  },
+  "dependencies": {}
+}
