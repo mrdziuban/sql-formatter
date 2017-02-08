@@ -1,0 +1,23 @@
+{
+  "name": "simple-sql-formatter",
+  "version": "0.0.1",
+  "description": "SQL Formatter",
+  "author": "Matt Dziuban",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "bundle": "browserify -t [ babelify --presets [ es2015 ] ] index.js | uglifyjs - -c -m --screw-ie8 -o bundle.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mrdziuban/simple-sql-formatter"
+  },
+  "devDependencies": {
+    "babel-core": "^6.22",
+    "babel-preset-es2015": "^6.22",
+    "babelify": "^7.3",
+    "browserify": "^14.0",
+    "uglify-js": "^2.7"
+  },
+  "dependencies": {}
+}
