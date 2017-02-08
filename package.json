@@ -1,5 +1,5 @@
 {
-  "name": "simple-sql-formatter",
+  "name": "sql-formatter",
   "version": "0.0.1",
   "description": "SQL Formatter",
   "author": "Matt Dziuban",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/mrdziuban/simple-sql-formatter"
+    "url": "git://github.com/mrdziuban/sql-formatter"
   },
   "devDependencies": {
     "babel-core": "^6.22",
