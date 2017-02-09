@@ -16,7 +16,7 @@ module.exports = function(env) {
         {
           test: /\.elm$/,
           exclude: [/elm-stuff/, /node_modules/],
-          loader: 'elm-webpack-loader?pathToMake=node_modules/.bin/elm-make&warn=true'
+          loader: 'elm-webpack-loader?pathToMake=node_modules/.bin/elm-make&warn=true&yes=true'
         }
       ]
     }
