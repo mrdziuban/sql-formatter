@@ -10,7 +10,7 @@ branches:
   only:
     - master
 script: npm run dist
-after_success: test $TRAVIS_PULL_REQUEST == 'false' && test $TRAVIS_BRANCH == 'master' && bin/deploy
+after_success: bin/deploy
 env:
   global:
     secure: pzd7o5TDzsmacOsUmO6TLS/f70smrnkCJJZrzO/d9zv1kZ3nEoYHqiozeMzOd6Cn/JfcMg8IsjGNkSZ0/PX5cBW+/3Ru2cAp1GhY7oMBFn6Loo6p1bScSQr2uvIHxrjGNlJESNvetjjqP6TDu9YWFJaqJVilFrcKyKZhmCT8x1Wct5UHV5ngCHLWgFl1Wympn6E53YfAEFvOg77PayGLw0xMZ6ZOV7nurF2MiRQg499kbAsv/pkXhGIro+H1dSx/LlMUoN2JOIOFg7I5d6PJLN9VgsfTWx8bIrTBy2VLo1/oPfbhNph0gtCOgYnQZE24Nk30DRCf5v6i1qmoUJ/p4qYES1mDRQzk4CqKIID5TkIM3BXCkNMk7mNvYHm74CVRi6joYmwU/XkIZFOwIhlKd9IwBSUqZ++SRumgGGKFstgWcAECK0xaN3ZXYVmLQiNQAF2LfYn2ys7bNYWbp9BYtV6UdRlh0/JuLKs5AaKKOA1pBDFF6FgG1FAzcQ/xJ81d/73zSJRYY42c7WJm0ho11CGbpXSfXSxS2X+YUtARvzRx53wnLl1/Ra7g4gabjZPvku5NaA5BU0UOZaQavPk4I7rt6RZQ7NruDVHovAIsOuMiv3tfFEaKdgvWo00c/FK6SyfxLVEOI3RXF4Gsar1AI4gtky6c6J9ZdvLBa5hw+6o=
