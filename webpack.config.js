@@ -3,6 +3,7 @@ const merge = require('webpack-merge');
 const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const WriteFilePlugin = require('write-file-webpack-plugin');
 
 module.exports = function(env) {
   const prod = env && env.production;
@@ -32,7 +33,7 @@ module.exports = function(env) {
     ]
   };
 
-  return merge(base,
+  return Object.defineProperty(merge(base,
     prod ? {
       plugins: [
         new CleanWebpackPlugin([path.join(__dirname, 'dist')], { verbose: true }),
@@ -49,6 +50,7 @@ module.exports = function(env) {
         contentBase: path.join(__dirname, 'dist', path.sep),
         historyApiFallback: true,
         port: 8000
-      }
-    });
+      },
+      plugins: [new WriteFilePlugin()]
+    }), 'outputPath', { enumerable: false, value: path.join(__dirname, 'dist', path.sep) });
 };
