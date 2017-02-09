@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -e
+
+base_dir="$(dirname "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)")"
+
+ln -sf "$base_dir/bin/pre-commit-hook" "$base_dir/.git/hooks/pre-commit"
+ln -sf "$base_dir/bin/post-commit-hook" "$base_dir/.git/hooks/post-commit"

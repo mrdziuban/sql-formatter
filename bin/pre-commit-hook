@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -e
+
+git diff --cached --name-only | \
+  grep -qE '\.(js|elm)$' && \
+  touch .gen-dist
+
+exit 0
