@@ -17,5 +17,6 @@ elm-stuff
 # elm-repl generated files
 repl-temp-*
 
+dist
 bundle.js.map
 .gen-dist
