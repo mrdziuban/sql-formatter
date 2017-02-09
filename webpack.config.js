@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = function(env) {
   const prod = env && env.production;
@@ -8,6 +9,8 @@ module.exports = function(env) {
   const base = {
     entry: path.join(__dirname, 'index.js'),
     output: {
+      path: path.join(__dirname, 'dist'),
+      publicPath: path.join(__dirname, 'dist', path.sep),
       filename: 'bundle.js',
       sourceMapFilename: '[file].map'
     },
@@ -19,7 +22,13 @@ module.exports = function(env) {
           loader: 'elm-webpack-loader?pathToMake=node_modules/.bin/elm-make&warn=true&yes=true'
         }
       ]
-    }
+    },
+    plugins: [
+      new CopyWebpackPlugin([
+        { from: path.join(__dirname, 'index.html'), to: path.join(__dirname, 'dist', 'index.html') },
+        { from: path.join(__dirname, 'img'), to: path.join(__dirname, 'dist', 'img') }
+      ]),
+    ]
   };
 
   return merge(base,
@@ -34,6 +43,10 @@ module.exports = function(env) {
       ]
     } : {
       devtool: '#source-map',
-      devServer: { historyApiFallback: true, port: 8000 }
+      devServer: {
+        contentBase: path.join(__dirname, 'dist', path.sep),
+        historyApiFallback: true,
+        port: 8000
+      }
     });
 };
