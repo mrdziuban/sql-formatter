@@ -5,6 +5,7 @@ cache:
   yarn: true
   directories:
     - node_modules
+    - elm-stuff/build-artifacts
 branches:
   only:
     - master
