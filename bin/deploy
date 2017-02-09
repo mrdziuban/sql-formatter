@@ -2,7 +2,7 @@
 
 set -e
 
-# if [ "$TRAVIS_BRANCH" != "master" ]; then exit 0 fi
+if [ "$TRAVIS_BRANCH" != "master" ]; then exit 0 fi
 
 GITHUB_REPO="https://${GITHUB_TOKEN}@github.com/mrdziuban/sql-formatter.git"
 
