@@ -21,7 +21,8 @@
     "elm-webpack-loader": "^4.2.0",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.3.0",
-    "webpack-merge": "^2.6.1"
+    "webpack-merge": "^2.6.1",
+    "write-file-webpack-plugin": "^3.4.2"
   },
   "dependencies": {}
 }
