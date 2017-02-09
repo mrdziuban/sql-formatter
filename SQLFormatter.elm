@@ -87,6 +87,7 @@ type alias Out =
   {
     str: String
   , shiftArr: List String
+  , tab: String
   , arr: List String
   , parensLevel: Int
   , deep: Int }
@@ -100,7 +101,7 @@ genOutput idx max input =
       if Regex.contains (regex "SELECT|SET") originalEl then
         input.arr
           |> toA
-          |> Array.set idx (Regex.replace Regex.All (regex "\\,") (\_ -> ",\n    ") originalEl)
+          |> Array.set idx (Regex.replace Regex.All (regex "\\,") (\_ -> (",\n" ++ (String.repeat 2 input.tab))) originalEl)
           |> toL
       else
         input.arr
@@ -119,6 +120,7 @@ genOutput idx max input =
       {
         str = outStr
       , shiftArr = input.shiftArr
+      , tab = input.tab
       , arr = outArr
       , parensLevel = outParensLevel
       , deep = outDeep }
@@ -145,6 +147,7 @@ format sql numSpaces =
       {
         str = ""
       , shiftArr = inShiftArr
+      , tab = tab
       , arr = inArr
       , parensLevel = 0
       , deep = 0 }
