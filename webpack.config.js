@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const path = require('path');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = function(env) {
@@ -27,13 +28,14 @@ module.exports = function(env) {
       new CopyWebpackPlugin([
         { from: path.join(__dirname, 'index.html'), to: path.join(__dirname, 'dist', 'index.html') },
         { from: path.join(__dirname, 'img'), to: path.join(__dirname, 'dist', 'img') }
-      ]),
+      ])
     ]
   };
 
   return merge(base,
     prod ? {
       plugins: [
+        new CleanWebpackPlugin([path.join(__dirname, 'dist')], { verbose: true }),
         new webpack.optimize.UglifyJsPlugin({
           compress: { screw_ie8: true, warnings: false },
           mangle: true,

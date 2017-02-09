@@ -22,4 +22,4 @@ touch .
 
 git add -A .
 git commit -m "Generate GitHub pages for commit $commit"
-git push upstream HEAD:gh-pages
+git push -q upstream HEAD:gh-pages
