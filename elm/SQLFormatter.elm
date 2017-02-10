@@ -1,6 +1,6 @@
 module SQLFormatter exposing (format)
 
-import Array
+import Array.Hamt as Array
 import List
 import Regex exposing (regex, caseInsensitive)
 import String
