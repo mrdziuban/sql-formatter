@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -e
+
+VERSION='0.5.2-alpha'
+ELM_VERSION='0.18'
+
+if [ -e ".bin/elm-format-$VERSION" ]; then echo "elm-format v$VERSION is already installed" && exit 0; fi
+
+mkdir -p .bin
+
+if [ "$(uname)" == 'Darwin' ]; then ARCH='mac-x64'; else ARCH='linux-x64'; fi
+
+URL="https://github.com/avh4/elm-format/releases/download/$VERSION/elm-format-$ELM_VERSION-$VERSION-$ARCH.tgz"
+curl -L -o "elm-format-$VERSION.tgz" "$URL"
+tar zxvf "elm-format-$VERSION.tgz"
+mv elm-format ".bin/elm-format-$VERSION"
+rm "elm-format-$VERSION.tgz"
