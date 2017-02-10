@@ -27,7 +27,7 @@ regexReplace pattern replacement str =
 allReplacements: String -> List (String, String)
 allReplacements tab =
   [
-    (" AND "                        , (sep ++ tab ++ tab ++ "AND "))
+    (" AND "                        , (sep ++ tab ++ "AND "))
   , (" BETWEEN "                    , (sep ++ tab ++ "BETWEEN "))
   , (" CASE "                       , (sep ++ tab ++ "CASE "))
   , (" ELSE "                       , (sep ++ tab ++ "ELSE "))
@@ -42,7 +42,7 @@ allReplacements tab =
   , ((" LEFT(" ++ sep ++ ")+JOIN ") , (sep ++ "LEFT JOIN "))
   , ((" RIGHT(" ++ sep ++ ")+JOIN "), (sep ++ "RIGHT JOIN "))
   , (" ON "                         , (sep ++ tab ++ "ON "))
-  , (" OR "                         , (sep ++ tab ++ tab ++ "OR "))
+  , (" OR "                         , (sep ++ tab ++ "OR "))
   , (" ORDER\\s+BY"                 , (sep ++ "ORDER BY "))
   , (" OVER "                       , (sep ++ tab ++ "OVER "))
   , ("\\(\\s*SELECT "               , (sep ++ "(SELECT "))

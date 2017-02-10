@@ -9,6 +9,10 @@ two reasons:
 The main [Elm architecture](https://guide.elm-lang.org/architecture/) for the app is in [App.elm](elm/App.elm) and
 the logic for formatting SQL strings is in [SQLFormatter.elm](elm/SQLFormatter.elm).
 
+Check it out at [http://mattdziuban.com/sql-formatter/](http://mattdziuban.com/sql-formatter/).
+
+![demo](https://cloud.githubusercontent.com/assets/4718399/22834351/d7d838ee-ef82-11e6-8556-ef36db229229.gif)
+
 ## Development
 
 ### Install
