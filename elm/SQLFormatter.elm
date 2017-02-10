@@ -1,9 +1,7 @@
 module SQLFormatter exposing (format)
 
 import Array.Hamt as Array
-import List
 import Regex exposing (regex, caseInsensitive)
-import String
 
 sep: String
 sep = "~::~"
