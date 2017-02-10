@@ -7,6 +7,12 @@
 body {
   min-height: 100vh;
 }
+nav {
+  background-color: #3E78A6;
+  h1 {
+    color: #fff;
+  }
+}
 #elm {
   flex: 1;
 }
