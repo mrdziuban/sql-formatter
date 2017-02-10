@@ -24,64 +24,72 @@ regexReplace: String -> String -> String -> String
 regexReplace pattern replacement str =
   Regex.replace Regex.All (caseInsensitive (regex pattern)) (\_ -> replacement) str
 
+allReplacements: String -> List (String, String)
+allReplacements tab =
+  [
+    (" AND "                        , (sep ++ tab ++ tab ++ "AND "))
+  , (" BETWEEN "                    , (sep ++ tab ++ "BETWEEN "))
+  , (" CASE "                       , (sep ++ tab ++ "CASE "))
+  , (" ELSE "                       , (sep ++ tab ++ "ELSE "))
+  , (" END "                        , (sep ++ tab ++ "END "))
+  , (" FROM "                       , (sep ++ "FROM "))
+  , (" GROUP\\s+BY"                 , (sep ++ "GROUP BY "))
+  , (" HAVING "                     , (sep ++ "HAVING "))
+  , (" IN "                         , (" IN "))
+  , (" JOIN "                       , (sep ++ "JOIN "))
+  , ((" CROSS(" ++ sep ++ ")+JOIN "), (sep ++ "CROSS JOIN "))
+  , ((" INNER(" ++ sep ++ ")+JOIN "), (sep ++ "INNER JOIN "))
+  , ((" LEFT(" ++ sep ++ ")+JOIN ") , (sep ++ "LEFT JOIN "))
+  , ((" RIGHT(" ++ sep ++ ")+JOIN "), (sep ++ "RIGHT JOIN "))
+  , (" ON "                         , (sep ++ tab ++ "ON "))
+  , (" OR "                         , (sep ++ tab ++ tab ++ "OR "))
+  , (" ORDER\\s+BY"                 , (sep ++ "ORDER BY "))
+  , (" OVER "                       , (sep ++ tab ++ "OVER "))
+  , ("\\(\\s*SELECT "               , (sep ++ "(SELECT "))
+  , ("\\)\\s*SELECT "               , (")" ++ sep ++ "SELECT "))
+  , (" THEN "                       , ("THEN" ++ sep ++ tab))
+  , (" UNION "                      , (sep ++ "UNION" ++ sep))
+  , (" USING "                      , (sep ++ "USING "))
+  , (" WHEN "                       , (sep ++ tab ++ "WHEN "))
+  , (" WHERE "                      , (sep ++ "WHERE "))
+  , (" WITH "                       , (sep ++ "WITH "))
+  , (" ALL "                        , (" ALL "))
+  , (" AS "                         , (" AS "))
+  , (" ASC "                        , (" ASC "))
+  , (" DESC "                       , (" DESC "))
+  , (" DISTINCT "                   , (" DISTINCT "))
+  , (" EXISTS "                     , (" EXISTS "))
+  , (" NOT "                        , (" NOT "))
+  , (" NULL "                       , (" NULL "))
+  , (" LIKE "                       , (" LIKE "))
+  , ("\\s*SELECT "                  , ("SELECT "))
+  , ("\\s*UPDATE "                  , ("UPDATE "))
+  , (" SET "                        , (" SET "))
+  , (("(" ++ sep ++ ")+")           , (sep))
+  ]
+
+performReplacements: List (String, String) -> String -> String
+performReplacements replacements str =
+  case replacements of
+    hd::tl -> performReplacements tl (regexReplace (Tuple.first hd) (Tuple.second hd) str)
+    [] -> str
+
 splitSql: String -> String -> List String
 splitSql str tab =
   str
     |> Regex.replace Regex.All (regex "\\s+") (\_ -> " ")
-    |> regexReplace " AND "                         (sep ++ tab ++ tab ++ "AND ")
-    |> regexReplace " BETWEEN "                     (sep ++ tab ++ "BETWEEN ")
-    |> regexReplace " CASE "                        (sep ++ tab ++ "CASE ")
-    |> regexReplace " ELSE "                        (sep ++ tab ++ "ELSE ")
-    |> regexReplace " END "                         (sep ++ tab ++ "END ")
-    |> regexReplace " FROM "                        (sep ++ "FROM ")
-    |> regexReplace " GROUP\\s+BY"                  (sep ++ "GROUP BY ")
-    |> regexReplace " HAVING "                      (sep ++ "HAVING ")
-    |> regexReplace " IN "                          (" IN ")
-    |> regexReplace " JOIN "                        (sep ++ "JOIN ")
-    |> regexReplace (" CROSS(" ++ sep ++ ")+JOIN ") (sep ++ "CROSS JOIN ")
-    |> regexReplace (" INNER(" ++ sep ++ ")+JOIN ") (sep ++ "INNER JOIN ")
-    |> regexReplace (" LEFT(" ++ sep ++ ")+JOIN ")  (sep ++ "LEFT JOIN ")
-    |> regexReplace (" RIGHT(" ++ sep ++ ")+JOIN ") (sep ++ "RIGHT JOIN ")
-    |> regexReplace " ON "                          (sep ++ tab ++ "ON ")
-    |> regexReplace " OR "                          (sep ++ tab ++ tab ++ "OR ")
-    |> regexReplace " ORDER\\s+BY"                  (sep ++ "ORDER BY ")
-    |> regexReplace " OVER "                        (sep ++ tab ++ "OVER ")
-    |> regexReplace "\\(\\s*SELECT "                (sep ++ "(SELECT ")
-    |> regexReplace "\\)\\s*SELECT "                (")" ++ sep ++ "SELECT ")
-    |> regexReplace " THEN "                        ("THEN" ++ sep ++ tab)
-    |> regexReplace " UNION "                       (sep ++ "UNION" ++ sep)
-    |> regexReplace " USING "                       (sep ++ "USING ")
-    |> regexReplace " WHEN "                        (sep ++ tab ++ "WHEN ")
-    |> regexReplace " WHERE "                       (sep ++ "WHERE ")
-    |> regexReplace " WITH "                        (sep ++ "WITH ")
-    |> regexReplace " ALL "                         (" ALL ")
-    |> regexReplace " AS "                          (" AS ")
-    |> regexReplace " ASC "                         (" ASC ")
-    |> regexReplace " DESC "                        (" DESC ")
-    |> regexReplace " DISTINCT "                    (" DISTINCT ")
-    |> regexReplace " EXISTS "                      (" EXISTS ")
-    |> regexReplace " NOT "                         (" NOT ")
-    |> regexReplace " NULL "                        (" NULL ")
-    |> regexReplace " LIKE "                        (" LIKE ")
-    |> regexReplace "\\s*SELECT "                   ("SELECT ")
-    |> regexReplace "\\s*UPDATE "                   ("UPDATE ")
-    |> regexReplace " SET "                         (" SET ")
-    |> regexReplace ("(" ++ sep ++ ")+")            (sep)
+    |> performReplacements (allReplacements tab)
     |> String.split sep
 
 splitIfEven: Int -> String -> String -> List String
 splitIfEven i str tab =
-  if i % 2 == 0 then splitSql str tab else [ str ]
-
-toA: List a -> Array.Array a
-toA l = Array.fromList l
-
-toL: Array.Array a -> List a
-toL a = Array.toList a
+  case i % 2 of
+    0 -> splitSql str tab
+    _ -> [ str ]
 
 getOrDefault: Int -> List String -> String
 getOrDefault idx list =
-  Maybe.withDefault "" (Array.get idx (toA list))
+  Maybe.withDefault "" (Array.get idx (Array.fromList list))
 
 type alias Out =
   {
@@ -98,24 +106,29 @@ genOutput idx max input =
     originalEl = getOrDefault idx input.arr
     outParensLevel = subqueryLevel originalEl input.parensLevel
     outArr =
-      if Regex.contains (regex "SELECT|SET") originalEl then
-        input.arr
-          |> toA
-          |> Array.set idx (Regex.replace Regex.All (regex "\\,") (\_ -> (",\n" ++ (String.repeat 2 input.tab))) originalEl)
-          |> toL
-      else
-        input.arr
+      case Regex.contains (regex "SELECT|SET") originalEl of
+        True ->
+          input.arr
+            |> Array.fromList
+            |> Array.set idx (Regex.replace Regex.All (regex "\\,") (\_ -> (",\n" ++ (String.repeat 2 input.tab))) originalEl)
+            |> Array.toList
+        False -> input.arr
     el = getOrDefault idx outArr
     (outStr, outDeep) =
-      if Regex.contains (regex "\\(\\s*SELECT") el then
-        (
-          input.str ++ (getOrDefault (input.deep + 1) input.shiftArr) ++ el
-        , input.deep + 1 )
-      else
-        (
-          if Regex.contains (regex "'") el then input.str ++ el else input.str ++ (getOrDefault input.deep input.shiftArr) ++ el
-        , if outParensLevel < 1 && input.deep /= 0 then input.deep - 1 else input.deep
-        )
+      case Regex.contains (regex "\\(\\s*SELECT") el of
+        True ->
+          (
+            input.str ++ (getOrDefault (input.deep + 1) input.shiftArr) ++ el
+          , input.deep + 1 )
+        False ->
+          (
+            case Regex.contains (regex "'") el of
+              True -> input.str ++ el
+              False -> input.str ++ (getOrDefault input.deep input.shiftArr) ++ el
+          , case outParensLevel < 1 && input.deep /= 0 of
+              True -> input.deep - 1
+              False -> input.deep
+          )
     out =
       {
         str = outStr
@@ -125,10 +138,9 @@ genOutput idx max input =
       , parensLevel = outParensLevel
       , deep = outDeep }
   in
-    if idx < max then
-      genOutput (idx + 1) max out
-    else
-      out
+    case idx < max of
+      True -> genOutput (idx + 1) max out
+      False -> out
 
 format: String -> Int -> String
 format sql numSpaces =
