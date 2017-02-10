@@ -12,17 +12,13 @@ createShiftArr: String -> List String
 createShiftArr space =
   List.map (\i -> "\n" ++ String.repeat i space) (List.range 0 99)
 
-subqueryLevel: String -> Int -> Int
-subqueryLevel str level =
-  let
-    openLen = String.length (Regex.replace Regex.All (regex "\\(") (\_ -> "") str)
-    closeLen = String.length (Regex.replace Regex.All (regex "\\)") (\_ -> "") str)
-  in
-    level - (openLen - closeLen)
-
 regexReplace: String -> String -> String -> String
 regexReplace pattern replacement str =
   Regex.replace Regex.All (caseInsensitive (regex pattern)) (\_ -> replacement) str
+
+subqueryLevel: String -> Int -> Int
+subqueryLevel str level =
+  level - (String.length (regexReplace "\\(" "" str) - String.length (regexReplace "\\)" "" str))
 
 allReplacements: String -> List (String, String)
 allReplacements tab =
@@ -68,18 +64,13 @@ allReplacements tab =
   , (("(" ++ sep ++ ")+")           , (sep))
   ]
 
-performReplacements: List (String, String) -> String -> String
-performReplacements replacements str =
-  case replacements of
-    hd::tl -> performReplacements tl (regexReplace (Tuple.first hd) (Tuple.second hd) str)
-    [] -> str
-
 splitSql: String -> String -> List String
 splitSql str tab =
-  str
-    |> Regex.replace Regex.All (regex "\\s+") (\_ -> " ")
-    |> performReplacements (allReplacements tab)
-    |> String.split sep
+  let
+    input = regexReplace "\\s+" " " str
+  in
+    List.foldr (\t acc -> regexReplace (Tuple.first t) (Tuple.second t) acc) input (allReplacements tab)
+      |> String.split sep
 
 splitIfEven: Int -> String -> String -> List String
 splitIfEven i str tab =
@@ -110,7 +101,7 @@ genOutput idx max input =
         True ->
           input.arr
             |> Array.fromList
-            |> Array.set idx (Regex.replace Regex.All (regex "\\,") (\_ -> (",\n" ++ (String.repeat 2 input.tab))) originalEl)
+            |> Array.set idx (regexReplace "\\," (",\n" ++ (String.repeat 2 input.tab)) originalEl)
             |> Array.toList
         False -> input.arr
     el = getOrDefault idx outArr
@@ -149,8 +140,8 @@ format sql numSpaces =
     inShiftArr = createShiftArr tab
     splitByQuotes =
       sql
-        |> Regex.replace Regex.All (regex "\\s+") (\_ -> " ")
-        |> Regex.replace Regex.All (caseInsensitive (regex "'")) (\_ -> (sep ++ "'"))
+        |> regexReplace "\\s+" " "
+        |> regexReplace "'" (sep ++ "'")
         |> String.split sep
     splitLen = List.length splitByQuotes
     inArr = List.concatMap (\i -> splitIfEven i (getOrDefault i splitByQuotes) tab) (List.range 0 (splitLen - 1))
@@ -165,5 +156,5 @@ format sql numSpaces =
       , deep = 0 }
   in
     (genOutput 0 len input).str
-      |> Regex.replace Regex.All (regex "\\n+") (\_ -> "\n")
+      |> regexReplace "\\n+" "\n"
       |> String.trim
