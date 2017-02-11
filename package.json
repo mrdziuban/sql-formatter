@@ -8,7 +8,8 @@
   "scripts": {
     "compile": "webpack --progress",
     "dev": "webpack-dev-server",
-    "dist": "webpack --progress --env.production"
+    "dist": "webpack --progress --env.production",
+    "lint": "find . -name *.elm -not -path './node_modules/*' -not -path './elm-stuff/*' | xargs -I {} bash -c 'cat {} | .bin/elm-format-0.5.2-alpha --stdin | git diff --exit-code --no-index -- {} -'"
   },
   "repository": {
     "type": "git",
