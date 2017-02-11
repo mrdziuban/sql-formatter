@@ -87,7 +87,9 @@ view model =
                 []
             ]
         , div [ class "form-group" ]
-            [ label [ for "sql-input", class "d-flex h4 mb-3" ] [ text "Input" ]
+            [ label
+                [ for "sql-input", class "d-flex h4 mb-3" ]
+                [ text "Input" ]
             , textarea
                 [ id "sql-input"
                 , class "form-control code"
@@ -98,7 +100,9 @@ view model =
                 [ text model.input ]
             ]
         , div [ class "form-group" ]
-            [ label [ for "sql-output", class "d-flex h4 mb-3" ] [ text "Output" ]
+            [ label
+                [ for "sql-output", class "d-flex h4 mb-3" ]
+                [ text "Output" ]
             , textarea
                 [ id "sql-output"
                 , class "form-control code mb-3"

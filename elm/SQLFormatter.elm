@@ -1,7 +1,7 @@
 module SQLFormatter exposing (format)
 
 import Array.Hamt as Array
-import Regex exposing (regex, caseInsensitive)
+import Regex exposing (caseInsensitive, regex)
 
 
 sep : String
@@ -15,13 +15,17 @@ createShiftArr space =
 
 
 regexReplace : String -> String -> String -> String
-regexReplace pattern replacement str =
-    Regex.replace Regex.All (caseInsensitive (regex pattern)) (\_ -> replacement) str
+regexReplace rx replacement str =
+    Regex.replace Regex.All (caseInsensitive (regex rx)) (\_ -> replacement) str
 
 
 subqueryLevel : String -> Int -> Int
 subqueryLevel str level =
-    level - (String.length (regexReplace "\\(" "" str) - String.length (regexReplace "\\)" "" str))
+    let
+        t =
+            ( (regexReplace "\\(" "" str), (regexReplace "\\)" "" str) )
+    in
+        level - (String.length (Tuple.first t) - String.length (Tuple.second t))
 
 
 allReplacements : String -> List ( String, String )
@@ -68,13 +72,18 @@ allReplacements tab =
     ]
 
 
+performReplacement : ( String, String ) -> String -> String
+performReplacement tup str =
+    regexReplace (Tuple.first tup) (Tuple.second tup) str
+
+
 splitSql : String -> String -> List String
 splitSql str tab =
     let
         input =
             regexReplace "\\s+" " " str
     in
-        List.foldr (\t acc -> regexReplace (Tuple.first t) (Tuple.second t) acc) input (allReplacements tab)
+        List.foldr performReplacement input (allReplacements tab)
             |> String.split sep
 
 
@@ -86,14 +95,14 @@ splitIfEven i str tab =
         [ str ]
 
 
-getOrDefault : Int -> List String -> String
-getOrDefault idx list =
+getOrElse : Int -> List String -> String
+getOrElse idx list =
     Maybe.withDefault "" (Array.get idx (Array.fromList list))
 
 
 type alias Out =
     { str : String
-    , shiftArr : List String
+    , shifts : List String
     , tab : String
     , arr : List String
     , parensLevel : Int
@@ -101,11 +110,16 @@ type alias Out =
     }
 
 
+replaceEl : Int -> String -> String -> Array.Array String -> Array.Array String
+replaceEl idx tab str arr =
+    Array.set idx (regexReplace "\\," (",\n" ++ (String.repeat 2 tab)) str) arr
+
+
 genOutput : Int -> Int -> Out -> Out
 genOutput idx max input =
     let
         originalEl =
-            getOrDefault idx input.arr
+            getOrElse idx input.arr
 
         outParensLevel =
             subqueryLevel originalEl input.parensLevel
@@ -115,52 +129,51 @@ genOutput idx max input =
                 True ->
                     input.arr
                         |> Array.fromList
-                        |> Array.set idx (regexReplace "\\," (",\n" ++ (String.repeat 2 input.tab)) originalEl)
+                        |> replaceEl idx input.tab originalEl
                         |> Array.toList
 
                 False ->
                     input.arr
 
         el =
-            getOrDefault idx outArr
+            getOrElse idx outArr
 
         ( outStr, outDeep ) =
-            case Regex.contains (regex "\\(\\s*SELECT") el of
-                True ->
-                    ( input.str ++ (getOrDefault (input.deep + 1) input.shiftArr) ++ el
-                    , input.deep + 1
-                    )
-
-                False ->
-                    ( case Regex.contains (regex "'") el of
-                        True ->
-                            input.str ++ el
-
-                        False ->
-                            input.str ++ (getOrDefault input.deep input.shiftArr) ++ el
-                    , case outParensLevel < 1 && input.deep /= 0 of
-                        True ->
-                            input.deep - 1
-
-                        False ->
-                            input.deep
-                    )
+            if Regex.contains (regex "\\(\\s*SELECT") el then
+                ( input.str ++ (getOrElse (input.deep + 1) input.shifts) ++ el
+                , input.deep + 1
+                )
+            else
+                ( (if Regex.contains (regex "'") el then
+                    input.str ++ el
+                   else
+                    input.str ++ (getOrElse input.deep input.shifts) ++ el
+                  )
+                , (if outParensLevel < 1 && input.deep /= 0 then
+                    input.deep - 1
+                   else
+                    input.deep
+                  )
+                )
 
         out =
             { str = outStr
-            , shiftArr = input.shiftArr
+            , shifts = input.shifts
             , tab = input.tab
             , arr = outArr
             , parensLevel = outParensLevel
             , deep = outDeep
             }
     in
-        case idx < max of
-            True ->
-                genOutput (idx + 1) max out
+        if idx < max then
+            genOutput (idx + 1) max out
+        else
+            out
 
-            False ->
-                out
+
+genPart : String -> List String -> Int -> List String
+genPart tab parts idx =
+    splitIfEven idx (getOrElse idx parts) tab
 
 
 format : String -> Int -> String
@@ -172,24 +185,24 @@ format sql numSpaces =
         inShiftArr =
             createShiftArr tab
 
-        splitByQuotes =
+        parts =
             sql
                 |> regexReplace "\\s+" " "
                 |> regexReplace "'" (sep ++ "'")
                 |> String.split sep
 
         splitLen =
-            List.length splitByQuotes
+            List.length parts
 
         inArr =
-            List.concatMap (\i -> splitIfEven i (getOrDefault i splitByQuotes) tab) (List.range 0 (splitLen - 1))
+            List.concatMap (genPart tab parts) (List.range 0 (splitLen - 1))
 
         len =
             List.length inArr
 
         input =
             { str = ""
-            , shiftArr = inShiftArr
+            , shifts = inShiftArr
             , tab = tab
             , arr = inArr
             , parensLevel = 0
