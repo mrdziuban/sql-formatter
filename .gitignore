@@ -14,8 +14,10 @@ node_modules
 # Elm
 # elm-package generated files
 elm-stuff
+tests/elm-stuff
 # elm-repl generated files
 repl-temp-*
+tests/repl-temp-*
 
 # Build
 dist

@@ -6,60 +6,68 @@ import Regex exposing (regex, caseInsensitive)
 sep: String
 sep = "~::~"
 
+getOrDefault: Int -> List String -> String
+getOrDefault idx list =
+  Maybe.withDefault "" (Array.get idx (Array.fromList list))
+
 createShiftArr: String -> List String
 createShiftArr space =
   List.map (\i -> "\n" ++ String.repeat i space) (List.range 0 99)
 
+regexReplaceFn: String -> (Regex.Match -> String) -> String -> String
+regexReplaceFn pattern replacementFn str =
+  Regex.replace Regex.All (caseInsensitive (regex pattern)) replacementFn str
+
 regexReplace: String -> String -> String -> String
 regexReplace pattern replacement str =
-  Regex.replace Regex.All (caseInsensitive (regex pattern)) (\_ -> replacement) str
+  regexReplaceFn pattern (\_ -> replacement) str
 
 subqueryLevel: String -> Int -> Int
 subqueryLevel str level =
   level - (String.length (regexReplace "\\(" "" str) - String.length (regexReplace "\\)" "" str))
 
-allReplacements: String -> List (String, String)
+extractJoin: Regex.Match -> String
+extractJoin {submatches} =
+  sep ++ (String.toUpper (getOrDefault 0 (List.map (Maybe.withDefault "") submatches))) ++ "JOIN "
+
+allReplacements: String -> List (String, Regex.Match -> String)
 allReplacements tab =
   [
-    (" AND "                        , (sep ++ tab ++ "AND "))
-  , (" BETWEEN "                    , (sep ++ tab ++ "BETWEEN "))
-  , (" CASE "                       , (sep ++ tab ++ "CASE "))
-  , (" ELSE "                       , (sep ++ tab ++ "ELSE "))
-  , (" END "                        , (sep ++ tab ++ "END "))
-  , (" FROM "                       , (sep ++ "FROM "))
-  , (" GROUP\\s+BY"                 , (sep ++ "GROUP BY "))
-  , (" HAVING "                     , (sep ++ "HAVING "))
-  , (" IN "                         , (" IN "))
-  , (" JOIN "                       , (sep ++ "JOIN "))
-  , ((" CROSS(" ++ sep ++ ")+JOIN "), (sep ++ "CROSS JOIN "))
-  , ((" INNER(" ++ sep ++ ")+JOIN "), (sep ++ "INNER JOIN "))
-  , ((" LEFT(" ++ sep ++ ")+JOIN ") , (sep ++ "LEFT JOIN "))
-  , ((" RIGHT(" ++ sep ++ ")+JOIN "), (sep ++ "RIGHT JOIN "))
-  , (" ON "                         , (sep ++ tab ++ "ON "))
-  , (" OR "                         , (sep ++ tab ++ "OR "))
-  , (" ORDER\\s+BY"                 , (sep ++ "ORDER BY "))
-  , (" OVER "                       , (sep ++ tab ++ "OVER "))
-  , ("\\(\\s*SELECT "               , (sep ++ "(SELECT "))
-  , ("\\)\\s*SELECT "               , (")" ++ sep ++ "SELECT "))
-  , (" THEN "                       , ("THEN" ++ sep ++ tab))
-  , (" UNION "                      , (sep ++ "UNION" ++ sep))
-  , (" USING "                      , (sep ++ "USING "))
-  , (" WHEN "                       , (sep ++ tab ++ "WHEN "))
-  , (" WHERE "                      , (sep ++ "WHERE "))
-  , (" WITH "                       , (sep ++ "WITH "))
-  , (" ALL "                        , (" ALL "))
-  , (" AS "                         , (" AS "))
-  , (" ASC "                        , (" ASC "))
-  , (" DESC "                       , (" DESC "))
-  , (" DISTINCT "                   , (" DISTINCT "))
-  , (" EXISTS "                     , (" EXISTS "))
-  , (" NOT "                        , (" NOT "))
-  , (" NULL "                       , (" NULL "))
-  , (" LIKE "                       , (" LIKE "))
-  , ("\\s*SELECT "                  , ("SELECT "))
-  , ("\\s*UPDATE "                  , ("UPDATE "))
-  , (" SET "                        , (" SET "))
-  , (("(" ++ sep ++ ")+")           , (sep))
+    (" AND "                        , (\_ -> (sep ++ tab ++ "AND ")))
+  , (" BETWEEN "                    , (\_ -> (sep ++ tab ++ "BETWEEN ")))
+  , (" CASE "                       , (\_ -> (sep ++ tab ++ "CASE ")))
+  , (" ELSE "                       , (\_ -> (sep ++ tab ++ "ELSE ")))
+  , (" END "                        , (\_ -> (sep ++ tab ++ "END ")))
+  , (" FROM "                       , (\_ -> (sep ++ "FROM ")))
+  , (" GROUP\\s+BY "                , (\_ -> (sep ++ "GROUP BY ")))
+  , (" HAVING "                     , (\_ -> (sep ++ "HAVING ")))
+  , (" IN "                         , (\_ -> (" IN ")))
+  , (" ((CROSS|INNER|LEFT|RIGHT) )?JOIN ", extractJoin)
+  , (" ON "                         , (\_ -> (sep ++ tab ++ "ON ")))
+  , (" OR "                         , (\_ -> (sep ++ tab ++ "OR ")))
+  , (" ORDER\\s+BY "                , (\_ -> (sep ++ "ORDER BY ")))
+  , (" OVER "                       , (\_ -> (sep ++ tab ++ "OVER ")))
+  , ("\\(\\s*SELECT "               , (\_ -> (sep ++ "(SELECT ")))
+  , ("\\)\\s*SELECT "               , (\_ -> (")" ++ sep ++ "SELECT ")))
+  , (" THEN "                       , (\_ -> (" THEN" ++ sep ++ tab)))
+  , (" UNION "                      , (\_ -> (sep ++ "UNION" ++ sep)))
+  , (" USING "                      , (\_ -> (sep ++ "USING ")))
+  , (" WHEN "                       , (\_ -> (sep ++ tab ++ "WHEN ")))
+  , (" WHERE "                      , (\_ -> (sep ++ "WHERE ")))
+  , (" WITH "                       , (\_ -> (sep ++ "WITH ")))
+  , (" ALL "                        , (\_ -> (" ALL ")))
+  , (" AS "                         , (\_ -> (" AS ")))
+  , (" ASC "                        , (\_ -> (" ASC ")))
+  , (" DESC "                       , (\_ -> (" DESC ")))
+  , (" DISTINCT "                   , (\_ -> (" DISTINCT ")))
+  , (" EXISTS "                     , (\_ -> (" EXISTS ")))
+  , (" NOT "                        , (\_ -> (" NOT ")))
+  , (" NULL "                       , (\_ -> (" NULL ")))
+  , (" LIKE "                       , (\_ -> (" LIKE ")))
+  , ("\\s*SELECT "                  , (\_ -> ("SELECT ")))
+  , ("\\s*UPDATE "                  , (\_ -> ("UPDATE ")))
+  , (" SET "                        , (\_ -> (" SET ")))
+  , (("(" ++ sep ++ ")+")           , (\_ -> (sep)))
   ]
 
 splitSql: String -> String -> List String
@@ -67,18 +75,12 @@ splitSql str tab =
   let
     input = regexReplace "\\s+" " " str
   in
-    List.foldr (\t acc -> regexReplace (Tuple.first t) (Tuple.second t) acc) input (allReplacements tab)
+    List.foldr (\t acc -> regexReplaceFn (Tuple.first t) (Tuple.second t) acc) input (allReplacements tab)
       |> String.split sep
 
 splitIfEven: Int -> String -> String -> List String
 splitIfEven i str tab =
-  case i % 2 of
-    0 -> splitSql str tab
-    _ -> [ str ]
-
-getOrDefault: Int -> List String -> String
-getOrDefault idx list =
-  Maybe.withDefault "" (Array.get idx (Array.fromList list))
+  if i % 2  == 0 then splitSql str tab else [ str ]
 
 type alias Out =
   {
@@ -99,7 +101,7 @@ genOutput idx max input =
         True ->
           input.arr
             |> Array.fromList
-            |> Array.set idx (regexReplace "\\," (",\n" ++ (String.repeat 2 input.tab)) originalEl)
+            |> Array.set idx (regexReplace "\\,\\s+" (",\n" ++ input.tab ++ input.tab) originalEl)
             |> Array.toList
         False -> input.arr
     el = getOrDefault idx outArr
@@ -108,7 +110,8 @@ genOutput idx max input =
         True ->
           (
             input.str ++ (getOrDefault (input.deep + 1) input.shiftArr) ++ el
-          , input.deep + 1 )
+          , input.deep + 1
+          )
         False ->
           (
             case Regex.contains (regex "'") el of
@@ -154,5 +157,6 @@ format sql numSpaces =
       , deep = 0 }
   in
     (genOutput 0 len input).str
+      |> regexReplace "\\s+\\n" "\n"
       |> regexReplace "\\n+" "\n"
       |> String.trim
