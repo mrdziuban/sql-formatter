@@ -55,6 +55,7 @@ allReplacements tab =
   , (" WHEN "                       , (\_ -> (sep ++ tab ++ "WHEN ")))
   , (" WHERE "                      , (\_ -> (sep ++ "WHERE ")))
   , (" WITH "                       , (\_ -> (sep ++ "WITH ")))
+  , (" SET "                        , (\_ -> (sep ++ "SET ")))
   , (" ALL "                        , (\_ -> (" ALL ")))
   , (" AS "                         , (\_ -> (" AS ")))
   , (" ASC "                        , (\_ -> (" ASC ")))
@@ -66,7 +67,7 @@ allReplacements tab =
   , (" LIKE "                       , (\_ -> (" LIKE ")))
   , ("\\s*SELECT "                  , (\_ -> ("SELECT ")))
   , ("\\s*UPDATE "                  , (\_ -> ("UPDATE ")))
-  , (" SET "                        , (\_ -> (" SET ")))
+  , ("\\s*DELETE "                  , (\_ -> ("DELETE ")))
   , (("(" ++ sep ++ ")+")           , (\_ -> (sep)))
   ]
 
