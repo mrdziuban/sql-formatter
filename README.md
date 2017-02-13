@@ -32,6 +32,14 @@ npm run dev
 
 Then visit [http://localhost:8000](http://localhost:8000) in your browser.
 
+### Test
+
+Tests are run using [elm-test](https://github.com/elm-community/elm-test). To run them:
+
+```bash
+npm run test
+```
+
 ### Build for production
 
 ```bash
