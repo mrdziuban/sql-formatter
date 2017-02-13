@@ -22,8 +22,8 @@ testTabbedKeywords: List Test
 testTabbedKeywords =
   List.map
     (\word ->
-      test ("Formatting of '" ++ word ++ "'") <|
-        \() -> Expect.equal (SQLFormatter.format ("foo " ++ word ++ " bar") 2) ("foo\n  " ++ word ++ " bar"))
+      test ("formatting of '" ++ word ++ "'") <|
+        \() -> Expect.equal ("foo\n  " ++ word ++ " bar") (SQLFormatter.format ("foo " ++ word ++ " bar") 2))
     tabbedKeywords
 
 untabbedKeywords: List String
@@ -46,8 +46,8 @@ testUntabbedKeywords: List Test
 testUntabbedKeywords =
   List.map
     (\word ->
-      test ("Formatting of '" ++ word ++ "'") <|
-        \() -> Expect.equal (SQLFormatter.format ("foo " ++ word ++ " bar") 2) ("foo\n" ++ word ++ " bar"))
+      test ("formatting of '" ++ word ++ "'") <|
+        \() -> Expect.equal ("foo\n" ++ word ++ " bar") (SQLFormatter.format ("foo " ++ word ++ " bar") 2))
     untabbedKeywords
 
 unchangedKeywords: List String
@@ -68,42 +68,42 @@ testUnchangedKeywords: List Test
 testUnchangedKeywords =
   List.map
     (\word ->
-      test ("Formatting of '" ++ word ++ "'") <|
-        \() -> Expect.equal (SQLFormatter.format ("foo " ++ word ++ " bar") 2) ("foo " ++ word ++ " bar"))
+      test ("formatting of '" ++ word ++ "'") <|
+        \() -> Expect.equal ("foo " ++ word ++ " bar") (SQLFormatter.format ("foo " ++ word ++ " bar") 2))
     unchangedKeywords
 
 testSelects: List Test
 testSelects =
-  [ test "Formatting of 'SELECT'" <|
-      \() -> Expect.equal (SQLFormatter.format "SELECT foo bar" 2) "SELECT foo bar"
-  , test "Formatting of ' SELECT'" <|
-      \() -> Expect.equal (SQLFormatter.format " SELECT foo bar" 2) "SELECT foo bar"
-  , test "Formatting of '(SELECT'" <|
-      \() -> Expect.equal (SQLFormatter.format "foo (SELECT bar" 2) "foo\n  (SELECT bar"
-  , test "Formatting of '( SELECT'" <|
-      \() -> Expect.equal (SQLFormatter.format "foo ( SELECT bar" 2) "foo\n  (SELECT bar"
-  , test "Formatting of ') SELECT'" <|
-      \() -> Expect.equal (SQLFormatter.format "foo) SELECT bar" 2) "foo)\nSELECT bar"
-  , test "Formatting of ')SELECT'" <|
-      \() -> Expect.equal (SQLFormatter.format "foo)SELECT bar" 2) "foo)\nSELECT bar"
+  [ test "formatting of 'SELECT'" <|
+      \() -> Expect.equal "SELECT foo bar" (SQLFormatter.format "SELECT foo bar" 2)
+  , test "formatting of ' SELECT'" <|
+      \() -> Expect.equal "SELECT foo bar" (SQLFormatter.format " SELECT foo bar" 2)
+  , test "formatting of '(SELECT'" <|
+      \() -> Expect.equal "foo\n  (SELECT bar" (SQLFormatter.format "foo (SELECT bar" 2)
+  , test "formatting of '( SELECT'" <|
+      \() -> Expect.equal "foo\n  (SELECT bar" (SQLFormatter.format "foo ( SELECT bar" 2)
+  , test "formatting of ') SELECT'" <|
+      \() -> Expect.equal "foo)\nSELECT bar" (SQLFormatter.format "foo) SELECT bar" 2)
+  , test "formatting of ')SELECT'" <|
+      \() -> Expect.equal "foo)\nSELECT bar" (SQLFormatter.format "foo)SELECT bar" 2)
   , test "Formatting when selecting multiple fields" <|
-      \() -> Expect.equal (SQLFormatter.format "SELECT foo, bar, baz" 2) "SELECT foo,\n    bar,\n    baz"
+      \() -> Expect.equal "SELECT foo,\n    bar,\n    baz" (SQLFormatter.format "SELECT foo, bar, baz" 2)
   ]
 
 testUpdates: List Test
 testUpdates =
-  [ test "Formatting of 'UPDATE'" <|
-      \() -> Expect.equal (SQLFormatter.format "UPDATE foo bar" 2) "UPDATE foo bar"
-  , test "Formatting of ' UPDATE'" <|
-      \() -> Expect.equal (SQLFormatter.format " UPDATE foo bar" 2) "UPDATE foo bar"
+  [ test "formatting of 'UPDATE'" <|
+      \() -> Expect.equal "UPDATE foo bar" (SQLFormatter.format "UPDATE foo bar" 2)
+  , test "formatting of ' UPDATE'" <|
+      \() -> Expect.equal "UPDATE foo bar" (SQLFormatter.format " UPDATE foo bar" 2)
   ]
 
 testDeletes: List Test
 testDeletes =
-  [ test "Formatting of 'DELETE'" <|
-      \() -> Expect.equal (SQLFormatter.format "DELETE foo bar" 2) "DELETE foo bar"
-  , test "Formatting of ' DELETE'" <|
-      \() -> Expect.equal (SQLFormatter.format " DELETE foo bar" 2) "DELETE foo bar"
+  [ test "formatting of 'DELETE'" <|
+      \() -> Expect.equal "DELETE foo bar" (SQLFormatter.format "DELETE foo bar" 2)
+  , test "formatting of ' DELETE'" <|
+      \() -> Expect.equal "DELETE foo bar" (SQLFormatter.format " DELETE foo bar" 2)
   ]
 
 testUpcasedKeywords: List Test
@@ -111,7 +111,7 @@ testUpcasedKeywords =
   List.map
     (\word ->
       test ("Upcasing of '" ++ word ++ "'") <|
-        \() -> Expect.equal (String.trim (SQLFormatter.format (" " ++ (String.toLower word) ++ " ") 2)) word)
+        \() -> Expect.equal word (String.trim (SQLFormatter.format (" " ++ (String.toLower word) ++ " ") 2)))
     (tabbedKeywords ++ untabbedKeywords ++ unchangedKeywords ++ [ "SELECT", "UPDATE", "THEN", "UNION", "USING" ])
 
 testFullQueries: Int -> List Test
@@ -119,48 +119,48 @@ testFullQueries numSpaces =
   let
     tab = String.repeat numSpaces " "
   in
-    [ test "Formatting a full SELECT query" <|
+    [ test "formatting a full SELECT query" <|
         \() -> Expect.equal
-          (SQLFormatter.format "SELECT a.b, c.d FROM a JOIN b on a.b = c.d WHERE a.b = 1 AND c.d = 1" numSpaces)
           ("SELECT a.b,\n" ++ tab ++ tab ++ "c.d\nFROM a\nJOIN b\n" ++ tab ++ "ON a.b = c.d\nWHERE a.b = 1\n" ++ tab ++ "AND c.d = 1")
-    , test "Formatting a full UPDATE query" <|
+          (SQLFormatter.format "SELECT a.b, c.d FROM a JOIN b on a.b = c.d WHERE a.b = 1 AND c.d = 1" numSpaces)
+    , test "formatting a full UPDATE query" <|
         \() -> Expect.equal
-          (SQLFormatter.format "UPDATE a SET a.b = 1, a.c = 2 WHERE a.d = 3" numSpaces)
           ("UPDATE a\nSET a.b = 1,\n" ++ tab ++ tab ++ "a.c = 2\nWHERE a.d = 3")
-    , test "Formatting a full DELETE query" <|
+          (SQLFormatter.format "UPDATE a SET a.b = 1, a.c = 2 WHERE a.d = 3" numSpaces)
+    , test "formatting a full DELETE query" <|
         \() -> Expect.equal
-          (SQLFormatter.format "DELETE FROM a WHERE a.b = 1 AND a.c = 2" numSpaces)
           ("DELETE\nFROM a\nWHERE a.b = 1\n" ++ tab ++ "AND a.c = 2")
+          (SQLFormatter.format "DELETE FROM a WHERE a.b = 1 AND a.c = 2" numSpaces)
     ]
 
 all: Test
 all =
   describe "SQLFormatter tests"
-    [ describe "Tabbed keywords" testTabbedKeywords
-    , describe "Untabbed keywords" testUntabbedKeywords
-    , describe "Unchanged keywords" testUnchangedKeywords
+    [ describe "tabbed keywords" testTabbedKeywords
+    , describe "untabbed keywords" testUntabbedKeywords
+    , describe "unchanged keywords" testUnchangedKeywords
     , describe "SELECTs" testSelects
     , describe "UPDATEs" testUpdates
     , describe "DELETEs" testDeletes
-    , describe "Special case keywords"
-      [ test "Formatting of 'THEN'" <|
-          \() -> Expect.equal (SQLFormatter.format "foo THEN bar" 2) "foo THEN\n  bar"
-      , test "Formatting of 'UNION'" <|
-          \() -> Expect.equal (SQLFormatter.format "foo UNION bar" 2) "foo\nUNION\nbar"
-      , test "Formatting of 'USING'" <|
-          \() -> Expect.equal (SQLFormatter.format "foo USING bar" 2) "foo\nUSING bar"
+    , describe "special case keywords"
+      [ test "formatting of 'THEN'" <|
+          \() -> Expect.equal "foo THEN\n  bar" (SQLFormatter.format "foo THEN bar" 2)
+      , test "formatting of 'UNION'" <|
+          \() -> Expect.equal "foo\nUNION\nbar" (SQLFormatter.format "foo UNION bar" 2)
+      , test "formatting of 'USING'" <|
+          \() -> Expect.equal "foo\nUSING bar" (SQLFormatter.format "foo USING bar" 2)
       ]
     , describe "Nested queries"
-      [ test "Formatting of single nested query" <|
+      [ test "formatting of single nested query" <|
           \() -> Expect.equal
-            (SQLFormatter.format "SELECT foo FROM (SELECT bar FROM baz)" 2)
             "SELECT foo\nFROM\n  (SELECT bar\n  FROM baz)"
-      , test "Formatting of multiple nested queries" <|
+            (SQLFormatter.format "SELECT foo FROM (SELECT bar FROM baz)" 2)
+      , test "formatting of multiple nested queries" <|
           \() -> Expect.equal
-            (SQLFormatter.format "SELECT foo FROM (SELECT bar FROM (SELECT baz FROM quux))" 2)
             "SELECT foo\nFROM\n  (SELECT bar\n  FROM\n    (SELECT baz\n    FROM quux))"
+            (SQLFormatter.format "SELECT foo FROM (SELECT bar FROM (SELECT baz FROM quux))" 2)
       ]
-    , describe "Case transformations" testUpcasedKeywords
-    , describe "Formatting full queries" (testFullQueries 2)
-    , describe "Formatting queries with a different number of spaces" (testFullQueries 4)
+    , describe "case transformations" testUpcasedKeywords
+    , describe "formatting full queries" (testFullQueries 2)
+    , describe "formatting queries with a different number of spaces" (testFullQueries 4)
     ]
