@@ -9,7 +9,9 @@ cache:
 branches:
   only:
     - master
-script: npm run dist
+script:
+  - npm run test
+  - npm run dist
 after_success: test $TRAVIS_PULL_REQUEST == 'false' && test $TRAVIS_BRANCH == 'master' && bin/deploy
 env:
   global:
