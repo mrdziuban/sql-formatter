@@ -48,11 +48,11 @@ update msg model =
       } ! []
     Spaces text ->
       let
-        spacesInt = Result.withDefault defaultSpaces (String.toInt text)
+        spaces = Result.withDefault defaultSpaces (String.toInt text)
       in
         { model
-            | spaces = spacesInt
-            , output = SQLFormatter.format model.input spacesInt } ! []
+            | spaces = spaces
+            , output = SQLFormatter.format model.input spaces } ! []
     Select ->
       (model, selectOutput ())
 
