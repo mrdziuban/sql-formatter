@@ -9,7 +9,8 @@
     "compile": "webpack --progress",
     "dev": "webpack-dev-server",
     "dist": "webpack --progress --env.production",
-    "test": "elm-test --compile node_modules/.bin/elm-make tests/elm/Main.elm"
+    "test": "elm-test --compile node_modules/.bin/elm-make tests/elm/Main.elm",
+    "watch": "webpack --progress --watch"
   },
   "repository": {
     "type": "git",
@@ -35,10 +36,10 @@
     "purescript": "^0.10.7",
     "purescript-psa": "^0.4.0",
     "purs-loader": "^2.3.0",
-    "sass-loader": "^5.0.1",
+    "sass-loader": "^6.0.1",
     "style-loader": "^0.13.1",
     "webpack": "^2.2.1",
-    "webpack-dev-server": "^2.3.0",
+    "webpack-dev-server": "^2.4.1",
     "webpack-merge": "^2.6.1",
     "write-file-webpack-plugin": "^3.4.2"
   },

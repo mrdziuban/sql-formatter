@@ -4,11 +4,17 @@
     "**/.*",
     "node_modules",
     "bower_components",
-    "output"
+    "output",
+    "purescript/output"
   ],
   "dependencies": {
+    "purescript-dom": "^3.5.1",
     "purescript-prelude": "^2.4.0",
-    "purescript-console": "^2.0.0"
+    "purescript-eff": "^2.0.0",
+    "purescript-maybe": "^2.0.1",
+    "purescript-strings": "^2.1.0",
+    "purescript-integers": "^2.1.1",
+    "purescript-arrays": "^3.2.1"
   },
   "devDependencies": {
     "purescript-psci-support": "^2.0.0"
