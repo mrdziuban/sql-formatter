@@ -32,5 +32,13 @@ test/repl-temp-*
 purescript/output
 test/purescript/output
 
+# Scala.js
+target
+lib_managed
+src_managed
+project/boot
+.history
+.cache
+
 # Build
 dist

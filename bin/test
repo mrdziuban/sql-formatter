@@ -20,5 +20,6 @@ runTests 'PureScript' $npm_bin/psa -o test/purescript/output \
                         'purescript/src/**/*.purs' \
                         'test/purescript/**/*.purs' \
                       && NODE_PATH=test/purescript/output node -e "require('Test.Main').main();"
+runTests 'Scala.js' sbt clean test
 
 exit $RESULT

@@ -40,6 +40,7 @@
     "purescript-psa": "^0.4.0",
     "purs-loader": "^2.3.0",
     "sass-loader": "^6.0.1",
+    "scalajs-loader": "git+https://github.com/mrdziuban/scalajs-loader.git",
     "style-loader": "^0.13.1",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.4.1",

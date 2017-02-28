@@ -12,7 +12,8 @@ const _languages = {
   elm: 'Elm',
   es6: 'ES6',
   opal: 'Opal',
-  purescript: 'PureScript'
+  purescript: 'PureScript',
+  scalajs: 'Scala.js'
 };
 
 module.exports = (env) => {
@@ -68,6 +69,7 @@ module.exports = (env) => {
           }
         },
         { test: /\.rb$/, loader: 'opal-loader' },
+        { test: /\.scala$/, loader: 'scalajs-loader' },
         {
           test: /\.scss$/,
           loader: ExtractTextPlugin.extract({
@@ -87,7 +89,7 @@ module.exports = (env) => {
         template: path.join(__dirname, 'index.ejs')
       })
     ],
-    resolve: { extensions: ['.js', '.ejs', '.elm', '.exjs', '.purs', '.rb', '.scss'] }
+    resolve: { extensions: ['.js', '.ejs', '.elm', '.exjs', '.purs', '.rb', '.scala', '.scss'] }
   };
 
   return Object.defineProperty(merge(base,
