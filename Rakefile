@@ -1,3 +1,4 @@
+require 'net/http'
 require 'opal/rspec/rake_task'
 
 Opal::RSpec::RakeTask.new(:default) do |server, task|

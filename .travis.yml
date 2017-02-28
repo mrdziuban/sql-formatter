@@ -15,7 +15,7 @@ branches:
   only:
     - master
 before_install:
-  - rvm install 2.4.0
+  - rvm install 2.3.3
   - nvm install 7.6
 install:
   # Yarn
