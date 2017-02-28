@@ -8,13 +8,34 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 
 const _languages = {
-  elixirscript: 'ElixirScript',
-  elm: 'Elm',
-  es6: 'ES6',
-  opal: 'Opal',
-  php: 'PHP.js',
-  purescript: 'PureScript',
-  scalajs: 'Scala.js'
+  elixirscript: {
+    name: 'ElixirScript',
+    link: 'https://github.com/elixirscript/elixirscript'
+  },
+  elm: {
+    name: 'Elm',
+    link: 'http://elm-lang.org/'
+  },
+  es6: {
+    name: 'ES6',
+    link: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/New_in_JavaScript/ECMAScript_2015_support_in_Mozilla'
+  },
+  opal: {
+    name: 'Opal',
+    link: 'http://opalrb.org/'
+  },
+  php: {
+    name: 'PHP.js',
+    link: 'http://phpjs.hertzen.com/'
+  },
+  purescript: {
+    name: 'PureScript',
+    link: 'http://www.purescript.org/'
+  },
+  scalajs: {
+    name: 'Scala.js',
+    link: 'http://www.scala-js.org/'
+  }
 };
 
 module.exports = (env) => {

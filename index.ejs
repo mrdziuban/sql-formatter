@@ -22,9 +22,12 @@
     </nav>
     <div id="main"></div>
     <footer class="p-2 text-center text-muted">
-      Built by <a href="http://mattdziuban.com" class="text-muted">Matt Dziuban</a>
-      &bull;
-      <a href="https://github.com/mrdziuban/sql-formatter" class="text-muted">Source on GitHub</a>
+      <div id="powered-by"></div>
+      <div>
+        Built by <a href="http://mattdziuban.com" class="text-muted">Matt Dziuban</a>
+        &bull;
+        <a href="https://github.com/mrdziuban/sql-formatter" class="text-muted">Source on GitHub</a>
+      </div>
     </footer>
     <script>
       var langs = <%= JSON.stringify(htmlWebpackPlugin.options.languages) %>;
@@ -41,7 +44,7 @@
       Object.keys(langs).forEach(function(l) {
         var opt = document.createElement('option');
         opt.value = l;
-        opt.innerText = langs[l];
+        opt.innerText = langs[l].name;
         langSelect.appendChild(opt);
       });
       langSelect.value = lang;
@@ -53,6 +56,9 @@
           window.location.pathname +
           '?lang=' + langSelect.value;
       };
+
+      document.getElementById('powered-by').innerHTML = '<a href="' + langs[lang].link + '" ' +
+        'class="text-muted" target="_blank">Powered by ' + langs[lang].name + '</a>';
     </script>
   </body>
 </html>
