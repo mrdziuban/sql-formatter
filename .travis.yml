@@ -9,8 +9,8 @@ cache:
   directories:
     - bower_components
     - node_modules
-    - elm-stuff/build-artifacts
-    - tests/elm/elm-stuff/build-artifacts
+    - elm-stuff
+    - tests/elm/elm-stuff
 branches:
   only:
     - master

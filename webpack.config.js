@@ -69,7 +69,7 @@ module.exports = (env) => {
         },
         {
           test: /\.rb$/,
-          loader: 'opal-webpack'
+          loader: 'opal-loader'
         },
         {
           test: /\.scss$/,

@@ -1,7 +1,7 @@
 require 'opal/mini'
 require 'native'
 
-require_relative 'sql_formatter'
+require 'sql_formatter'
 
 class App
   class << self

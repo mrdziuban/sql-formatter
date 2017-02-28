@@ -34,7 +34,7 @@
     "html-webpack-plugin": "^2.28.0",
     "mocha": "^3.2.0",
     "node-sass": "^4.5.0",
-    "opal-webpack": "^1.0.9",
+    "opal-loader": "git+https://github.com/mrdziuban/opal-loader.git",
     "pulp": "^10.0.1",
     "purescript": "^0.10.7",
     "purescript-psa": "^0.4.0",
