@@ -27,24 +27,21 @@
       <a href="https://github.com/mrdziuban/sql-formatter" class="text-muted">Source on GitHub</a>
     </footer>
     <script>
-      var langs = {
-        elm: { file: 'js/elm.js', name: 'Elm' },
-        purescript: { file: 'js/purescript.js', name: 'PureScript' }
-      };
+      var langs = <%= JSON.stringify(htmlWebpackPlugin.options.languages) %>
       var urlMatch = window.location.search.match(/lang=([^&]+)/);
       var lang = urlMatch && urlMatch[1] && langs[urlMatch[1].toLowerCase()]
         ? urlMatch[1].toLowerCase()
         : Object.keys(langs)[0];
       var script = document.createElement('script');
       script.type = 'text/javascript';
-      script.src = langs[lang].file;
+      script.src = 'js/' + lang + '.js';
       document.body.appendChild(script);
 
       var langSelect = document.getElementById('languages');
       Object.keys(langs).forEach(function(l) {
         var opt = document.createElement('option');
         opt.value = l;
-        opt.innerText = langs[l].name;
+        opt.innerText = langs[l];
         langSelect.appendChild(opt);
       });
       langSelect.value = lang;

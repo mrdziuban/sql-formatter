@@ -4,17 +4,26 @@ const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
+
+const languages = {
+  elm: 'Elm',
+  es6: 'ES6',
+  purescript: 'PureScript'
+};
 
 module.exports = function(env) {
   const prod = env && env.production;
 
   const base = {
-    entry: {
-      main: path.join(__dirname, 'js', 'index.js'),
-      elm: path.join(__dirname, 'elm', 'index.js'),
-      purescript: path.join(__dirname, 'purescript', 'index.js')
-    },
+    entry: Object.assign(
+      { main: path.join(__dirname, 'js', 'index.js') },
+      Object.keys(languages).reduce(function(acc, lang) {
+        acc[lang] = path.join(__dirname, lang, 'index.js');
+        return acc;
+      }, {})
+    ),
     output: {
       path: path.join(__dirname, 'dist'),
       publicPath: path.join(__dirname, 'dist', path.sep),
@@ -23,6 +32,8 @@ module.exports = function(env) {
     },
     module: {
       rules: [
+        { test: /\.js$/, loader: 'babel-loader' },
+        { test: /\.ejs$/, loader: 'ejs-loader' },
         {
           test: /\.elm$/,
           exclude: [/elm-stuff/, /node_modules/],
@@ -51,11 +62,14 @@ module.exports = function(env) {
       ]
     },
     plugins: [
-      new CopyWebpackPlugin([
-        { from: path.join(__dirname, 'index.html'), to: path.join(__dirname, 'dist', 'index.html') },
-        { from: path.join(__dirname, 'img'), to: path.join(__dirname, 'dist', 'img') }
-      ]),
-      new ExtractTextPlugin(path.join('css', 'bundle.css'))
+      new CopyWebpackPlugin([{ from: path.join(__dirname, 'img'), to: path.join(__dirname, 'dist', 'img') }]),
+      new ExtractTextPlugin(path.join('css', 'bundle.css')),
+      new HtmlWebpackPlugin({
+        languages: languages,
+        inject: false,
+        filename: path.join(__dirname, 'dist', 'index.html'),
+        template: path.join(__dirname, 'index.ejs')
+      })
     ]
   };
 
