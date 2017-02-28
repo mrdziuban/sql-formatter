@@ -7,7 +7,7 @@ const defaultSpaces = 2;
     <div class="container">
       <div class="form-inline mb-3">
         <label for="sql-spaces" class="h4 mr-3">Spaces</label>
-        <input id="sql-spaces" class="form-control" type="number" value="${defaultSpaces}">
+        <input id="sql-spaces" class="form-control" type="number" value="${defaultSpaces}" min="0">
       </div>
       <div class="form-group">
         <label for="sql-input" class="d-flex h4 mb-3">Input</label>

@@ -1,4 +1,4 @@
-module App where
+module App (main) where
 
 import Prelude ((>>>), (>>=), (<>), bind, pure, unit, Unit)
 import Control.Monad.Eff (Eff)
@@ -31,7 +31,7 @@ view =
   <div class="container">
     <div class="form-inline mb-3">
       <label for="sql-spaces" class="h4 mr-3">Spaces</label>
-      <input id="sql-spaces" class="form-control" type="number" value="2">
+      <input id="sql-spaces" class="form-control" type="number" value="2" min="0">
     </div>
     <div class="form-group">
       <label for="sql-input" class="d-flex h4 mb-3">Input</label>
