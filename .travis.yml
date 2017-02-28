@@ -12,10 +12,11 @@ cache:
   directories:
     - node_modules
     - bower_components
-    - elm-stuff
-    - test/elm/elm-stuff
+    - elm-stuff/build-artifacts
+    - test/elm/elm-stuff/build-artifacts
     - $HOME/.ivy2/cache
     - $HOME/.sbt/boot
+    - $HOME/.pub-cache
 branches:
   only:
     - master
