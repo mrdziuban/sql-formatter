@@ -33,7 +33,7 @@ install:
   - export PATH="$HOME/.elixirscript/$EXS_VERSION/dist/elixirscript/bin:$PATH"
 script:
   - npm run test
-  - if [ $TRAVIS_TEST_RESULT -eq 0 ] && [ $TRAVIS_PULL_REQUEST == 'false' ] && [ $TRAVIS_BRANCH == 'master' ]; bin/deploy; fi
+  - if [ $TRAVIS_TEST_RESULT == 0 ] && [ $TRAVIS_PULL_REQUEST == 'false' ] && [ $TRAVIS_BRANCH == 'master' ]; then bin/deploy; fi
 env:
   global:
     - EXS_VERSION=f915cb5
