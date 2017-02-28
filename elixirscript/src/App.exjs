@@ -1,9 +1,7 @@
 defmodule App do
-  @on_js_load :main
-
   require JS
 
-  def main do
+  def start(_, _) do
     render
     bind_events
   end

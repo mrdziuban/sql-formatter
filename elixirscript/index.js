@@ -1,1 +1,3 @@
-import App from './src/App.exjs';
+import Elixir from './src/App.exjs';
+
+Elixir.start(Elixir.App, []);
