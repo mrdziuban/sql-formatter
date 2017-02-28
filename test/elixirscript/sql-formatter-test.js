@@ -1,28 +1,17 @@
 import assert from 'assert';
+import {execSync} from 'child_process';
 import {readFileSync, writeFileSync} from 'fs';
 import path from 'path';
 
-require('babel-register')({ ignore: false });
-
-const rootDir = path.resolve(path.join(__dirname, '..', '..'));
-const esLoaderDir = path.join(rootDir, 'node_modules', 'elixirscript-loader');
-
-let SQLFormatter;
+const src = path.resolve(path.join(__dirname), '..', '..', 'elixirscript', 'src');
+const out = path.join(__dirname, 'out');
 
 // Compile ElixirScript code
-const fakeWebpack = (done) => ({
-  context: path.join(rootDir, 'elixirscript', 'src'),
-  resourcePath: path.join(rootDir, 'elixirscript', 'src', 'App.exjs'),
-  async: () => (err, contents) => {
-    if (err) { throw err; }
+execSync(`rm -rf ${out}`);
+execSync(`elixirscript ${src} -o ${out}`);
 
-    writeFileSync(path.join(esLoaderDir, 'tmp', 'Elixir.App.js'), contents);
-    const Elixir = require(path.join(esLoaderDir, 'tmp', 'Elixir.App.js')).default
-    SQLFormatter = Elixir.SQLFormatter.__load(Elixir);
-
-    done();
-  }
-});
+const Elixir = require(path.join(out, 'Elixir.App.js')).default;
+const SQLFormatter = Elixir.SQLFormatter.__load(Elixir);
 
 const tabbedKeywords = [
   'AND',
@@ -89,14 +78,6 @@ const testFullQueries = (numSpaces) => {
 };
 
 describe('SQLFormatter.format', () => {
-  before(function(done) {
-    this.timeout(10000);
-    require(esLoaderDir).call(
-      fakeWebpack(done),
-      readFileSync(path.join(rootDir, 'elixirscript', 'src', 'App.exjs'))
-    );
-  });
-
   describe('formatting of tabbed keywords', () => {
     tabbedKeywords.forEach((word) => {
       it(`formatting of '${word}'`, () => assert.equal(SQLFormatter.format(`foo ${word} bar`, 2), `foo\n  ${word} bar`));
