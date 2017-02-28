@@ -2,13 +2,21 @@
 
 declare -i RESULT=0
 
+npm_bin=$(npm bin)
+
 function runTests {
   printf "\n\033[0;33mRunning $1 tests\033[0m\n\n"
   "${@:2}"
   RESULT+=$?
 }
 
-runTests "Elm" $(npm bin)/elm-test --compile $(npm bin)/elm-make tests/elm/Main.elm
-runTests "ES6" $(npm bin)/mocha --compilers js:babel-core/register tests/es6/**/*.js
+runTests "Elm" $npm_bin/elm-test --compile $npm_bin/elm-make tests/elm/Main.elm
+runTests "ES6" $npm_bin/mocha --compilers js:babel-core/register tests/es6/**/*.js
+runTests "PureScript" $npm_bin/psa -o tests/purescript/output \
+                        --psc=$npm_bin/psc \
+                        'bower_components/purescript-*/src/**/*.purs' \
+                        'purescript/src/**/*.purs' \
+                        'tests/purescript/**/*.purs' \
+                      && NODE_PATH=tests/purescript/output node -e "require('Test.Main').main();"
 
 exit $RESULT

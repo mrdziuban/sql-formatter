@@ -1,12 +1,13 @@
 module SQLFormatter (formatSql) where
 
-import Prelude ((<>), (#), (+), (-), (==), (/=), (<), (&&), map, mod)
-import Data.Array (concatMap, index, length, range, updateAt)
+import Prelude ((<>), (#), ($), (+), (-), (==), (/=), (<), (&&), map, mod, not)
+import Data.Array (concatMap, filter, index, length, range, updateAt)
 import Data.Either (Either(..))
 import Data.Foldable (foldl)
+import Data.Foreign (isUndefined, toForeign)
 import Data.Maybe (fromMaybe)
-import Data.String (length, Pattern(Pattern), split, trim) as String
-import Data.String.Regex (Regex, regex, replace, test)
+import Data.String (length, Pattern(Pattern), split, toUpper, trim) as String
+import Data.String.Regex (Regex, regex, replace', test)
 import Data.String.Regex.Flags (global, ignoreCase)
 import Data.Tuple (fst, snd, Tuple(..))
 
@@ -33,12 +34,15 @@ createShiftArr :: String -> (Array String)
 createShiftArr tab =
   map (\i -> "\n" <> (strRepeat i tab)) (range 0 99)
 
-regexReplace' :: (Either String Regex) -> String -> String -> String
-regexReplace' (Right rx) replacement str = replace rx replacement str
-regexReplace' (Left _) _ str = str
+regexReplaceFn' :: (Either String Regex) -> (String -> Array String -> String) -> String -> String
+regexReplaceFn' (Right rx) replacementFn str = replace' rx replacementFn str
+regexReplaceFn' (Left _) _ str = str
+
+regexReplaceFn :: String -> (String -> Array String -> String) -> String -> String
+regexReplaceFn rx replacementFn str = regexReplaceFn' (regex rx (global <> ignoreCase)) replacementFn str
 
 regexReplace :: String -> String -> String -> String
-regexReplace rx replacement str = regexReplace' (regex rx (global <> ignoreCase)) replacement str
+regexReplace rx replacement str = regexReplaceFn rx (\_ _ -> replacement) str
 
 regexTest' :: (Either String Regex) -> String -> Boolean
 regexTest' (Right rx) str = test rx str
@@ -47,49 +51,50 @@ regexTest' (Left _) _ = false
 regexTest :: String -> String -> Boolean
 regexTest rx str = regexTest' (regex rx ignoreCase) str
 
-allReplacements :: String -> Array (Tuple String String)
+allReplacements :: String -> Array (Tuple String (String -> Array String -> String))
 allReplacements tab =
-  [ Tuple " AND "                              (sep <> tab <> "AND ")
-  , Tuple " BETWEEN "                          (sep <> tab <> "BETWEEN ")
-  , Tuple " CASE "                             (sep <> tab <> "CASE ")
-  , Tuple " ELSE "                             (sep <> tab <> "ELSE ")
-  , Tuple " END "                              (sep <> tab <> "END ")
-  , Tuple " FROM "                             (sep <> "FROM ")
-  , Tuple " GROUP\\s+BY "                      (sep <> "GROUP BY ")
-  , Tuple " HAVING "                           (sep <> "HAVING ")
-  , Tuple " IN "                               " IN "
-  , Tuple " ((CROSS|INNER|LEFT|RIGHT) )?JOIN " " $1JOIN "
-  , Tuple " ON "                               (sep <> tab <> "ON ")
-  , Tuple " OR "                               (sep <> tab <> "OR ")
-  , Tuple " ORDER\\s+BY "                      (sep <> "ORDER BY ")
-  , Tuple " OVER "                             (sep <> tab <> "OVER ")
-  , Tuple "\\(\\s*SELECT "                     (sep <> "(SELECT ")
-  , Tuple "\\)\\s*SELECT "                     (")" <> sep <> "SELECT ")
-  , Tuple " THEN "                             (" THEN" <> sep <> tab)
-  , Tuple " UNION "                            (sep <> "UNION" <> sep)
-  , Tuple " USING "                            (sep <> "USING ")
-  , Tuple " WHEN "                             (sep <> tab <> "WHEN ")
-  , Tuple " WHERE "                            (sep <> "WHERE ")
-  , Tuple " WITH "                             (sep <> "WITH ")
-  , Tuple " SET "                              (sep <> "SET ")
-  , Tuple " ALL "                              " ALL "
-  , Tuple " AS "                               " AS "
-  , Tuple " ASC "                              " ASC "
-  , Tuple " DESC "                             " DESC "
-  , Tuple " DISTINCT "                         " DISTINCT "
-  , Tuple " EXISTS "                           " EXISTS "
-  , Tuple " NOT "                              " NOT "
-  , Tuple " NULL "                             " NULL "
-  , Tuple " LIKE "                             " LIKE "
-  , Tuple "\\s*SELECT "                        "SELECT "
-  , Tuple "\\s*UPDATE "                        "UPDATE "
-  , Tuple "\\s*DELETE "                        "DELETE "
-  , Tuple ("(" <> sep <> ")+")                 sep
+  [ Tuple " AND "                              (\_ _ -> sep <> tab <> "AND ")
+  , Tuple " BETWEEN "                          (\_ _ -> sep <> tab <> "BETWEEN ")
+  , Tuple " CASE "                             (\_ _ -> sep <> tab <> "CASE ")
+  , Tuple " ELSE "                             (\_ _ -> sep <> tab <> "ELSE ")
+  , Tuple " END "                              (\_ _ -> sep <> tab <> "END ")
+  , Tuple " FROM "                             (\_ _ -> sep <> "FROM ")
+  , Tuple " GROUP\\s+BY "                      (\_ _ -> sep <> "GROUP BY ")
+  , Tuple " HAVING "                           (\_ _ -> sep <> "HAVING ")
+  , Tuple " IN "                               (\_ _ -> " IN ")
+  , Tuple " ((CROSS|INNER|LEFT|RIGHT) )?JOIN "
+          (\_ m -> String.toUpper $ sep <> (getOrDefault 0 (filter (\s -> not (isUndefined (toForeign s))) m)) <> "JOIN ")
+  , Tuple " ON "                               (\_ _ -> sep <> tab <> "ON ")
+  , Tuple " OR "                               (\_ _ -> sep <> tab <> "OR ")
+  , Tuple " ORDER\\s+BY "                      (\_ _ -> sep <> "ORDER BY ")
+  , Tuple " OVER "                             (\_ _ -> sep <> tab <> "OVER ")
+  , Tuple "\\(\\s*SELECT "                     (\_ _ -> sep <> "(SELECT ")
+  , Tuple "\\)\\s*SELECT "                     (\_ _ -> ")" <> sep <> "SELECT ")
+  , Tuple " THEN "                             (\_ _ -> " THEN" <> sep <> tab)
+  , Tuple " UNION "                            (\_ _ -> sep <> "UNION" <> sep)
+  , Tuple " USING "                            (\_ _ -> sep <> "USING ")
+  , Tuple " WHEN "                             (\_ _ -> sep <> tab <> "WHEN ")
+  , Tuple " WHERE "                            (\_ _ -> sep <> "WHERE ")
+  , Tuple " WITH "                             (\_ _ -> sep <> "WITH ")
+  , Tuple " SET "                              (\_ _ -> sep <> "SET ")
+  , Tuple " ALL "                              (\_ _ -> " ALL ")
+  , Tuple " AS "                               (\_ _ -> " AS ")
+  , Tuple " ASC "                              (\_ _ -> " ASC ")
+  , Tuple " DESC "                             (\_ _ -> " DESC ")
+  , Tuple " DISTINCT "                         (\_ _ -> " DISTINCT ")
+  , Tuple " EXISTS "                           (\_ _ -> " EXISTS ")
+  , Tuple " NOT "                              (\_ _ -> " NOT ")
+  , Tuple " NULL "                             (\_ _ -> " NULL ")
+  , Tuple " LIKE "                             (\_ _ -> " LIKE ")
+  , Tuple "\\s*SELECT "                        (\_ _ -> "SELECT ")
+  , Tuple "\\s*UPDATE "                        (\_ _ -> "UPDATE ")
+  , Tuple "\\s*DELETE "                        (\_ _ -> "DELETE ")
+  , Tuple ("(" <> sep <> ")+")                 (\_ _ -> sep)
   ]
 
 splitSql :: String -> String -> (Array String)
 splitSql str tab =
-  allReplacements tab # foldl (\acc t -> regexReplace (fst t) (snd t) acc) (regexReplace "\\s+" " " str)
+  allReplacements tab # foldl (\acc t -> regexReplaceFn (fst t) (snd t) acc) (regexReplace "\\s+" " " str)
                       # String.split (String.Pattern sep)
 
 splitIfEven :: Int -> String -> String -> (Array String)

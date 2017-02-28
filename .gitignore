@@ -24,6 +24,7 @@ tests/repl-temp-*
 .psci
 .psci_modules
 purescript/output
+tests/purescript/output
 
 # Build
 dist
