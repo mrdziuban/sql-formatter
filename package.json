@@ -25,6 +25,7 @@
     "clean-webpack-plugin": "^0.1.15",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.26.1",
+    "dart-loader": "git+https://github.com/mrdziuban/dart-loader.git",
     "ejs-loader": "^0.3.0",
     "elixirscript-loader": "git+https://github.com/mrdziuban/elixirscript-loader.git#elixirscript-master-updates",
     "elm": "^0.18.0",

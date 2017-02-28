@@ -8,6 +8,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 
 const _languages = {
+  google: {
+    name: 'Dart',
+    link: 'https://www.dartlang.org/',
+    in: 'dart'
+  },
   elixirscript: {
     name: 'ElixirScript',
     link: 'https://github.com/elixirscript/elixirscript'
@@ -58,7 +63,7 @@ module.exports = (env) => {
     entry: Object.assign(
       { main: path.join(__dirname, 'js', 'index.js') },
       Object.keys(languages).reduce((acc, lang) => {
-        acc[lang] = path.join(__dirname, lang, 'index.js');
+        acc[lang] = path.join(__dirname, (languages[lang].in || lang), 'index.js');
         return acc;
       }, {})
     ),
@@ -70,7 +75,8 @@ module.exports = (env) => {
     },
     module: {
       rules: [
-        { test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/ },
+        { test: /\.js$/, loader: 'babel-loader' },
+        { test: /\.dart$/, loader: 'dart-loader' },
         { test: /\.ejs$/, loader: 'ejs-loader' },
         {
           test: /\.elm$/,
@@ -113,7 +119,7 @@ module.exports = (env) => {
         template: path.join(__dirname, 'index.ejs')
       })
     ],
-    resolve: { extensions: ['.js', '.ejs', '.elm', '.exjs', '.php', '.purs', '.rb', '.scala', '.scss'] }
+    resolve: { extensions: ['.js', '.dart', '.ejs', '.elm', '.exjs', '.php', '.purs', '.rb', '.scala', '.scss'] }
   };
 
   return Object.defineProperty(merge(base,

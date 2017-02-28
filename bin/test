@@ -10,6 +10,7 @@ function runTests {
   RESULT+=$?
 }
 
+runTests 'Dart' pub run test -r expanded test/dart
 runTests 'ElixirScript' $npm_bin/mocha --compilers js:babel-core/register test/elixirscript/*.js
 runTests 'Elm' $npm_bin/elm-test --compile $npm_bin/elm-make test/elm/Main.elm
 runTests 'ES6' $npm_bin/mocha --compilers js:babel-core/register test/es6/**/*.js

@@ -8,9 +8,17 @@ npm-debug.log
 node_modules
 bower_components
 
-#OS STUFF
+# OS stuff
 .DS_Store
 .tmp
+
+# Dart
+build
+packages
+.buildlog
+.packages
+.project
+.pub
 
 # ElixirScript
 test/elixirscript/out

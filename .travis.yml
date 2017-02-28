@@ -32,6 +32,11 @@ before_install:
   - export PATH="$HOME/.yarn/bin:$PATH"
   # Opal
   - rvm install 2.3.3
+  # Dart
+  - mkdir -p "$HOME/.dart"
+  - curl -L https://storage.googleapis.com/dart-archive/channels/stable/release/1.22.1/sdk/dartsdk-linux-x64-release.zip -o "$HOME/.dart/dart.zip"
+  - unzip "$HOME/.dart/dart.zip" -d "$HOME/.dart"
+  - export PATH="$HOME/.dart/dart-sdk/bin:$PATH"
   # ElixirScript
   - mkdir -p "$HOME/.elixirscript/$EXS_VERSION"
   - curl -o- -L https://s3.amazonaws.com/mrdziuban-resources/elixirscript-$EXS_VERSION.tar.gz -o "$HOME/.elixirscript/elixirscript-$EXS_VERSION.tar.gz" | tar xvzf - -C "$HOME/.elixirscript/$EXS_VERSION"
@@ -51,6 +56,8 @@ install:
   # Manually run install scripts that Yarn messes up sometimes
   - node node_modules/elm/install.js
   - node node_modules/purescript/lib/install.js
+  # Dart
+  - pub get
   # PureScript
   - $(npm bin)/bower install
   # Opal
