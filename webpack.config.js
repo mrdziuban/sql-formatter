@@ -4,6 +4,7 @@ const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const SuppressChunksPlugin = require('suppress-chunks-webpack-plugin').default;
 const WriteFilePlugin = require('write-file-webpack-plugin');
 
 module.exports = function(env) {
@@ -11,7 +12,9 @@ module.exports = function(env) {
 
   const base = {
     entry: {
-      elm: path.join(__dirname, 'elm', 'index.js')
+      main: path.join(__dirname, 'js', 'index.js'),
+      elm: path.join(__dirname, 'elm', 'index.js'),
+      purescript: path.join(__dirname, 'purescript', 'index.js')
     },
     output: {
       path: path.join(__dirname, 'dist'),
@@ -27,6 +30,19 @@ module.exports = function(env) {
           loader: 'elm-webpack-loader?pathToMake=node_modules/.bin/elm-make&warn=true&yes=true'
         },
         {
+          test: /\.purs$/,
+          loader: 'purs-loader',
+          query: {
+            output: path.join(__dirname, 'purescript', 'output'),
+            psc: 'psa',
+            pscArgs: { sourceMaps: !prod },
+            src: [
+              path.join(__dirname, 'bower_components', 'purescript-*', 'src', '**', '*.purs'),
+              path.join(__dirname, 'purescript', 'src', '**', '*.purs')
+            ]
+          }
+        },
+        {
           test: /\.scss$/,
           loader: ExtractTextPlugin.extract({
             fallback: 'style-loader',
@@ -40,7 +56,8 @@ module.exports = function(env) {
         { from: path.join(__dirname, 'index.html'), to: path.join(__dirname, 'dist', 'index.html') },
         { from: path.join(__dirname, 'img'), to: path.join(__dirname, 'dist', 'img') }
       ]),
-      new ExtractTextPlugin(path.join('css', 'bundle.css'))
+      new ExtractTextPlugin(path.join('css', 'bundle.css')),
+      new SuppressChunksPlugin(['main'])
     ]
   };
 

@@ -20,5 +20,10 @@ tests/elm-stuff
 repl-temp-*
 tests/repl-temp-*
 
+# PureScript
+.psci
+.psci_modules
+purescript/output
+
 # Build
 dist

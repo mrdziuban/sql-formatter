@@ -1,5 +1,5 @@
 {
-  "name": "psc-sql-formatter",
+  "name": "sql-formatter",
   "ignore": [
     "**/.*",
     "node_modules",
