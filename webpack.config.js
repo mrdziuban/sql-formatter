@@ -25,6 +25,10 @@ const _languages = {
     name: 'ES6',
     link: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/New_in_JavaScript/ECMAScript_2015_support_in_Mozilla'
   },
+  gopherjs: {
+    name: 'GopherJS',
+    link: 'https://github.com/gopherjs/gopherjs'
+  },
   opal: {
     name: 'Opal',
     link: 'http://opalrb.org/'
@@ -84,6 +88,7 @@ module.exports = (env) => {
           loader: `elm-webpack-loader?pathToMake=${path.join(__dirname, 'node_modules', '.bin', 'elm-make')}&warn=true&yes=true`
         },
         { test: /\.exjs$/, loader: 'babel-loader!elixirscript-loader' },
+        { test: /\.go$/, loader: 'gopherjs-loader' },
         { test: /\.php$/, loader: 'raw-loader' },
         {
           test: /\.purs$/,
@@ -119,7 +124,7 @@ module.exports = (env) => {
         template: path.join(__dirname, 'index.ejs')
       })
     ],
-    resolve: { extensions: ['.js', '.dart', '.ejs', '.elm', '.exjs', '.php', '.purs', '.rb', '.scala', '.scss'] }
+    resolve: { extensions: ['.js', '.dart', '.ejs', '.elm', '.exjs', '.go', '.php', '.purs', '.rb', '.scala', '.scss'] }
   };
 
   return Object.defineProperty(merge(base,

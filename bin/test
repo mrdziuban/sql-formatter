@@ -14,6 +14,7 @@ runTests 'Dart' pub run test -r expanded test/dart
 runTests 'ElixirScript' $npm_bin/mocha --compilers js:babel-core/register test/elixirscript/*.js
 runTests 'Elm' $npm_bin/elm-test --compile $npm_bin/elm-make test/elm/Main.elm
 runTests 'ES6' $npm_bin/mocha --compilers js:babel-core/register test/es6/**/*.js
+runTests 'GopherJS' go test -v gopherjs/src/*.go
 runTests 'Opal' bundle exec rake SPEC_OPTS='--color --format documentation'
 runTests 'PHP' phpunit --colors always --bootstrap php/src/SQLFormatter.php test/php/SQLFormatterTest.php
 runTests 'PureScript' $npm_bin/psa -o test/purescript/output \

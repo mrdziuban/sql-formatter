@@ -29,27 +29,32 @@ addons:
 before_install:
   # Node
   - nvm install 7.6
-  - curl -o- -L https://yarnpkg.com/install.sh | bash
+  - curl -o- -sL https://yarnpkg.com/install.sh | bash
   - export PATH="$HOME/.yarn/bin:$PATH"
   # Opal
   - rvm install 2.3.3
   # Dart
   - mkdir -p "$HOME/.dart"
-  - curl -L https://storage.googleapis.com/dart-archive/channels/stable/release/1.22.1/sdk/dartsdk-linux-x64-release.zip -o "$HOME/.dart/dart.zip"
-  - unzip "$HOME/.dart/dart.zip" -d "$HOME/.dart"
+  - curl -sL https://storage.googleapis.com/dart-archive/channels/stable/release/1.22.1/sdk/dartsdk-linux-x64-release.zip -o "$HOME/.dart/dart.zip"
+  - unzip -q "$HOME/.dart/dart.zip" -d "$HOME/.dart"
   - export PATH="$HOME/.dart/dart-sdk/bin:$PATH"
   # ElixirScript
   - mkdir -p "$HOME/.elixirscript/$EXS_VERSION"
-  - curl -o- -L https://s3.amazonaws.com/mrdziuban-resources/elixirscript-$EXS_VERSION.tar.gz -o "$HOME/.elixirscript/elixirscript-$EXS_VERSION.tar.gz" | tar xvzf - -C "$HOME/.elixirscript/$EXS_VERSION"
+  - curl -o- -sL https://s3.amazonaws.com/mrdziuban-resources/elixirscript-$EXS_VERSION.tar.gz -o "$HOME/.elixirscript/elixirscript-$EXS_VERSION.tar.gz" | tar xzf - -C "$HOME/.elixirscript/$EXS_VERSION"
   - export PATH="$HOME/.elixirscript/$EXS_VERSION/dist/elixirscript/bin:$PATH"
+  # GopherJS
+  - mkdir -p "$HOME/.go"
+  - curl -o- -sL https://storage.googleapis.com/golang/go1.8.linux-amd64.tar.gz | tar xzf - -C "$HOME/.go"
+  - export GOROOT="$HOME/.go/go"
+  - export PATH="$GOROOT/bin:$HOME/go/bin:$PATH"
   # PHP.js
   - mkdir -p "$HOME/.phpunit/bin"
-  - curl -L https://phar.phpunit.de/phpunit-4.8.phar -o "$HOME/.phpunit/bin/phpunit"
+  - curl -sL https://phar.phpunit.de/phpunit-4.8.phar -o "$HOME/.phpunit/bin/phpunit"
   - chmod +x "$HOME/.phpunit/bin/phpunit"
   - export PATH="$HOME/.phpunit/bin:$PATH"
   # Scala.js
   - mkdir -p "$HOME/.sbt-bin/$SBT_VERSION"
-  - curl -o- -L https://dl.bintray.com/sbt/native-packages/sbt/$SBT_VERSION/sbt-$SBT_VERSION.tgz | tar xvzf - -C "$HOME/.sbt-bin/$SBT_VERSION" --strip-components 1
+  - curl -o- -sL https://dl.bintray.com/sbt/native-packages/sbt/$SBT_VERSION/sbt-$SBT_VERSION.tgz | tar xzf - -C "$HOME/.sbt-bin/$SBT_VERSION" --strip-components 1
   - export JAVA_HOME=/usr/lib/jvm/java-8-oracle
   - export PATH="$HOME/.sbt-bin/$SBT_VERSION/bin:$JAVA_HOME/bin:$PATH"
 install:
@@ -59,8 +64,10 @@ install:
   - node node_modules/purescript/lib/install.js
   # Dart
   - pub get
+  # GopherJS
+  - go get -u github.com/gopherjs/gopherjs
   # PureScript
-  - $(npm bin)/bower install
+  - $(npm bin)/bower --silent install
   # Opal
   - bundle install --jobs=3 --retry=3 --deployment
 script:
