@@ -10,11 +10,13 @@ module.exports = function(env) {
   const prod = env && env.production;
 
   const base = {
-    entry: path.join(__dirname, 'js', 'index.js'),
+    entry: {
+      elm: path.join(__dirname, 'elm', 'index.js')
+    },
     output: {
       path: path.join(__dirname, 'dist'),
       publicPath: path.join(__dirname, 'dist', path.sep),
-      filename: path.join('js', 'bundle.js'),
+      filename: path.join('js', '[name].js'),
       sourceMapFilename: '[file].map'
     },
     module: {
