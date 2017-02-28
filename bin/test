@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+declare -i RESULT=0
+
+function runTests {
+  printf "\n\033[0;33mRunning $1 tests\033[0m\n\n"
+  "${@:2}"
+  RESULT+=$?
+}
+
+runTests "Elm" $(npm bin)/elm-test --compile $(npm bin)/elm-make tests/elm/Main.elm
+runTests "ES6" $(npm bin)/mocha --compilers js:babel-core/register tests/es6/**/*.js
+
+exit $RESULT

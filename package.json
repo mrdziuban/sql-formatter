@@ -9,7 +9,7 @@
     "compile": "webpack --progress",
     "dev": "webpack-dev-server",
     "dist": "webpack --progress --env.production",
-    "test": "elm-test --compile node_modules/.bin/elm-make tests/elm/Main.elm",
+    "test": "bin/test",
     "watch": "webpack --progress --watch"
   },
   "repository": {
@@ -31,6 +31,7 @@
     "elm-webpack-loader": "^4.2.0",
     "extract-text-webpack-plugin": "^2.0.0-rc.3",
     "html-webpack-plugin": "^2.28.0",
+    "mocha": "^3.2.0",
     "node-sass": "^4.5.0",
     "pulp": "^10.0.1",
     "purescript": "^0.10.7",

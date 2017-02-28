@@ -23,7 +23,7 @@ const allReplacements = (tab) => {
     [/ GROUP\s+BY /gi,                       sep + 'GROUP BY '],
     [/ HAVING /gi,                           sep + 'HAVING '],
     [/ IN /gi,                               ' IN '],
-    [/ ((CROSS|INNER|LEFT|RIGHT) )?JOIN /gi, ' $1JOIN '],
+    [/ ((CROSS|INNER|LEFT|RIGHT) )?JOIN /gi, (_, m) => (sep + (m || '') + 'JOIN ').toUpperCase()],
     [/ ON /gi,                               sep + tab + 'ON '],
     [/ OR /gi,                               sep + tab + 'OR '],
     [/ ORDER\s+BY /gi,                       sep + 'ORDER BY '],
@@ -77,10 +77,12 @@ export default (sql, numSpaces) => {
   const splitByQuotes = transform(sql,
     str => str.replace(/\s+/g, ' '),
     str => str.replace(/'/g, `${sep}'`),
-    str => str.split(sep));
+    str => str.split(sep)
+  );
   const input = {
     str: '',
     shiftArr: createShiftArr(tab),
+    tab: tab,
     arr: Array.prototype.concat(
       ...[...Array(splitByQuotes.length).keys()].map(i => splitIfEven(i, splitByQuotes[i], tab))
     ),
@@ -89,11 +91,11 @@ export default (sql, numSpaces) => {
   };
 
   const len = input.arr.length;
-  return [...Array(len).keys()].reduce((acc, i) => {
+  const output = [...Array(len).keys()].reduce((acc, i) => {
     const originalEl = acc.arr[i];
     const parensLevel = subqueryLevel(originalEl, acc.parensLevel);
     const arr = /SELECT|SET/.test(originalEl)
-      ? acc.arr.slice(0, i).concat(originalEl.replace(/\,\s+/, `,\n${acc.tab}${acc.tab}`)).concat(acc.arr.slice(i + 1))
+      ? acc.arr.slice(0, i).concat(originalEl.replace(/\,\s+/g, `,\n${acc.tab}${acc.tab}`)).concat(acc.arr.slice(i + 1))
       : acc.arr;
     const el = arr[i]
     const [str, deep] = updateOutput(el, parensLevel, acc, i);
@@ -103,5 +105,12 @@ export default (sql, numSpaces) => {
       parensLevel,
       deep
     });
-  }, input).str.trim();
+  }, input);
+
+  return transform(output,
+    out => out.str,
+    str => str.replace(/\s+\n/g, '\n'),
+    str => str.replace(/\n+/g, '\n'),
+    str => str.trim()
+  );
 };
