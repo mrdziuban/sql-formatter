@@ -10,7 +10,7 @@ cache:
     - bower_components
     - node_modules
     - elm-stuff
-    - tests/elm/elm-stuff
+    - test/elm/elm-stuff
 branches:
   only:
     - master

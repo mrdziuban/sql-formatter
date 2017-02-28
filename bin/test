@@ -10,15 +10,15 @@ function runTests {
   RESULT+=$?
 }
 
-runTests 'ElixirScript' $npm_bin/mocha --compilers js:babel-core/register tests/elixirscript/*.js
-runTests 'Elm' $npm_bin/elm-test --compile $npm_bin/elm-make tests/elm/Main.elm
-runTests 'ES6' $npm_bin/mocha --compilers js:babel-core/register tests/es6/**/*.js
+runTests 'ElixirScript' $npm_bin/mocha --compilers js:babel-core/register test/elixirscript/*.js
+runTests 'Elm' $npm_bin/elm-test --compile $npm_bin/elm-make test/elm/Main.elm
+runTests 'ES6' $npm_bin/mocha --compilers js:babel-core/register test/es6/**/*.js
 runTests 'Opal' bundle exec rake SPEC_OPTS='--color --format documentation'
-runTests 'PureScript' $npm_bin/psa -o tests/purescript/output \
+runTests 'PureScript' $npm_bin/psa -o test/purescript/output \
                         --psc=$npm_bin/psc \
                         'bower_components/purescript-*/src/**/*.purs' \
                         'purescript/src/**/*.purs' \
-                        'tests/purescript/**/*.purs' \
-                      && NODE_PATH=tests/purescript/output node -e "require('Test.Main').main();"
+                        'test/purescript/**/*.purs' \
+                      && NODE_PATH=test/purescript/output node -e "require('Test.Main').main();"
 
 exit $RESULT

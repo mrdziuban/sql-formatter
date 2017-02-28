@@ -13,15 +13,15 @@ bower_components
 .tmp
 
 # ElixirScript
-tests/elixirscript/out
+test/elixirscript/out
 
 # Elm
 # elm-package generated files
 elm-stuff
-tests/elm-stuff
+test/elm-stuff
 # elm-repl generated files
 repl-temp-*
-tests/repl-temp-*
+test/repl-temp-*
 
 # Opal
 .bundle
@@ -30,7 +30,7 @@ tests/repl-temp-*
 .psci
 .psci_modules
 purescript/output
-tests/purescript/output
+test/purescript/output
 
 # Build
 dist
