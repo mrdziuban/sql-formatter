@@ -1,0 +1,53 @@
+defmodule App do
+  @on_js_load :main
+
+  require JS
+
+  def main do
+    render
+    bind_events
+  end
+
+  defp render do
+    JS.update(:document.getElementById("main"), %{"innerHTML" => ~s"""
+      <div class="container">
+        <div class="form-inline mb-3">
+          <label for="sql-spaces" class="h4 mr-3">Spaces</label>
+          <input id="sql-spaces" class="form-control" type="number" value="2" min="0">
+        </div>
+        <div class="form-group">
+          <label for="sql-input" class="d-flex h4 mb-3">Input</label>
+          <textarea id="sql-input" class="form-control code" placeholder="Enter SQL" rows="9"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="sql-output" class="d-flex h4 mb-3">Output</label>
+          <textarea id="sql-output" class="form-control code" rows="20" readonly></textarea>
+        </div>
+      </div>
+    """})
+  end
+
+  defp format_sql(sql, :error), do: SQLFormatter.format(sql, 2)
+  defp format_sql(sql, {n, _}) when n < 0, do: SQLFormatter.format(sql, 2)
+  defp format_sql(sql, {n, _}), do: SQLFormatter.format(sql, n)
+
+  defp update_output(output, input, spaces) do
+    JS.update(output, %{"value" => format_sql(input.value, Integer.parse(spaces.value))})
+  end
+
+  defp select_output(output), do: output.select
+
+  defp bind_events do
+    input = :document.getElementById("sql-input")
+    output = :document.getElementById("sql-output")
+    spaces = :document.getElementById("sql-spaces")
+
+    input.addEventListener("input", fn(_) -> update_output(output, input, spaces) end)
+    spaces.addEventListener("input", fn(_) -> update_output(output, input, spaces) end)
+
+    JS.update(output, %{
+      "onclick" => fn(_) -> select_output(output) end,
+      "onfocus" => fn(_) -> select_output(output) end
+    })
+  end
+end

@@ -7,22 +7,33 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 
-const languages = {
+const _languages = {
+  elixirscript: 'ElixirScript',
   elm: 'Elm',
   es6: 'ES6',
   opal: 'Opal',
   purescript: 'PureScript'
 };
 
-module.exports = function(env) {
+module.exports = (env) => {
   const prod = env && env.production;
+
+  // Filter languages based on CLI args
+  const exclude = env && env.exclude ? env.exclude.split(',').map(e => e.trim()).filter(e => e !== '') : [];
+  const only = env && env.only ? env.only.split(',').map(e => e.trim()).filter(e => e !== '') : [];
+
+  const langsToInclude = only.length > 0 ? only : Object.keys(_languages).filter(l => exclude.indexOf(l) === -1);
+  const languages = langsToInclude.reduce((acc, l) => { acc[l] = _languages[l]; return acc; }, {})
+
+  console.log(`\nBuilding languages: ${Object.keys(languages).join(', ')}\n`);
+
   process.env.OPAL_USE_BUNDLER = true;
   process.env.OPAL_LOAD_PATH = path.join(__dirname, 'opal', 'src');
 
   const base = {
     entry: Object.assign(
       { main: path.join(__dirname, 'js', 'index.js') },
-      Object.keys(languages).reduce(function(acc, lang) {
+      Object.keys(languages).reduce((acc, lang) => {
         acc[lang] = path.join(__dirname, lang, 'index.js');
         return acc;
       }, {})
@@ -42,6 +53,7 @@ module.exports = function(env) {
           exclude: [/elm-stuff/, /node_modules/],
           loader: 'elm-webpack-loader?pathToMake=node_modules/.bin/elm-make&warn=true&yes=true'
         },
+        { test: /\.exjs$/, loader: 'babel-loader!elixirscript-loader' },
         {
           test: /\.purs$/,
           loader: 'purs-loader',

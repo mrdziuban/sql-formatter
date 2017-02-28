@@ -1756,6 +1756,10 @@ electron-to-chromium@^1.2.1:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.2.2.tgz#e41bc9488c88e3cfa1e94bde28e8420d7d47c47c"
 
+"elixirscript-loader@git+https://github.com/mrdziuban/elixirscript-loader.git#updates":
+  version "0.0.6"
+  resolved "git+https://github.com/mrdziuban/elixirscript-loader.git#5b4ab64607cee77e5ba6f7265af6b4159b5d070f"
+
 elliptic@^6.0.0:
   version "6.3.3"
   resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.3.3.tgz#5482d9646d54bcb89fd7d994fc9e2e9568876e3f"

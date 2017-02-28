@@ -1,9 +1,13 @@
-language: node_js
-node_js:
-  - '7.5'
+language: elixir
+elixir:
+  - 1.4.2
+otp_release:
+  - 19.2
 cache:
+  bundler: true
   yarn: true
   directories:
+    - bower_components
     - node_modules
     - elm-stuff/build-artifacts
     - tests/elm/elm-stuff/build-artifacts
@@ -12,16 +16,26 @@ branches:
     - master
 before_install:
   - rvm install 2.4.0
+  - nvm install 7.6
 install:
+  # Yarn
   - curl -o- -L https://yarnpkg.com/install.sh | bash
   - export PATH="$HOME/.yarn/bin:$PATH"
   - yarn
+  # PureScript
   - $(npm bin)/bower install
+  # Opal
   - bundle install --jobs=3 --retry=3 --deployment
+  # ElixirScript
+  - mkdir -p "$HOME/.elixirscript/$EXS_VERSION"
+  - curl -L https://s3.amazonaws.com/mrdziuban-resources/elixirscript-$EXS_VERSION.tar.gz -o "$HOME/.elixirscript/elixirscript-$EXS_VERSION.tar.gz"
+  - tar xvzf "$HOME/.elixirscript/elixirscript-$EXS_VERSION.tar.gz" -C "$HOME/.elixirscript/$EXS_VERSION"
+  - export PATH="$HOME/.elixirscript/$EXS_VERSION/dist/elixirscript/bin:$PATH"
 script:
   - npm run test
   - npm run dist
 after_success: test $TRAVIS_PULL_REQUEST == 'false' && test $TRAVIS_BRANCH == 'master' && bin/deploy
 env:
   global:
-    secure: Nzcx0q8WGAKiVGDlCs3smE5ujLk/jHsjnJ4gHKPDGPfReVNaQ63cXXTVjLRuJtUY1EmdUfVVXFqSKCXaKiyZI/uIt++NgGZnh85/a1DnXj6/bltZBRsAR1WdPT/cddthQvUHwVX7sSTKvqZly7e4TGaM7Ygv6L+PJ20+/yWZIhz1YrJqgGnkiUTzMBRaOAIPwutOwym8Ze2hLq56kd8a4T1VMh5sKhnPO3ONv4q6d+wk7Ie0AeaqZv6GSIBePOJ7vlGyTDX0AAKaehdJ22hNEywTvceJ5ej77Yof1/loAra8KdDSP86dXbbb40xZ6vOCyCx/wELTFGytIM2HCJNO9vUwSYuG/nI10VCqKMQ++sZMuOcSY0W3E/B11/s3wuww5wo+P2jhRo/MIFGOEIwAu3GD7RLE+H4LTudLDYsClLpoGyZIse7P+8iJUyzqJaG3hRIMdVtFn0NMdt7Ps2hof68rTDQj3bbhsHgl6G4aXvYO1TjglN7BLyBb4FhdUQa3sy/Dg+oRorCHoy4VO85Xx47aWA8KPkNATVdRrvDOFzATCx7VyGbs7G9hRzaOC55133EelsUoZ25ogz4qQr7tvyMI+t9lIT6I/ypB20pSCGkUI4yhyozl9YYmAozNS3/JNzpdsipPtvrsRUlFI50ig/onxhTg3AWN0XYnfB8uxBs=
+    - EXS_VERSION=712111f
+    - secure: Nzcx0q8WGAKiVGDlCs3smE5ujLk/jHsjnJ4gHKPDGPfReVNaQ63cXXTVjLRuJtUY1EmdUfVVXFqSKCXaKiyZI/uIt++NgGZnh85/a1DnXj6/bltZBRsAR1WdPT/cddthQvUHwVX7sSTKvqZly7e4TGaM7Ygv6L+PJ20+/yWZIhz1YrJqgGnkiUTzMBRaOAIPwutOwym8Ze2hLq56kd8a4T1VMh5sKhnPO3ONv4q6d+wk7Ie0AeaqZv6GSIBePOJ7vlGyTDX0AAKaehdJ22hNEywTvceJ5ej77Yof1/loAra8KdDSP86dXbbb40xZ6vOCyCx/wELTFGytIM2HCJNO9vUwSYuG/nI10VCqKMQ++sZMuOcSY0W3E/B11/s3wuww5wo+P2jhRo/MIFGOEIwAu3GD7RLE+H4LTudLDYsClLpoGyZIse7P+8iJUyzqJaG3hRIMdVtFn0NMdt7Ps2hof68rTDQj3bbhsHgl6G4aXvYO1TjglN7BLyBb4FhdUQa3sy/Dg+oRorCHoy4VO85Xx47aWA8KPkNATVdRrvDOFzATCx7VyGbs7G9hRzaOC55133EelsUoZ25ogz4qQr7tvyMI+t9lIT6I/ypB20pSCGkUI4yhyozl9YYmAozNS3/JNzpdsipPtvrsRUlFI50ig/onxhTg3AWN0XYnfB8uxBs=

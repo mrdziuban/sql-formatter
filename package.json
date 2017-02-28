@@ -26,6 +26,7 @@
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.26.1",
     "ejs-loader": "^0.3.0",
+    "elixirscript-loader": "git+https://github.com/mrdziuban/elixirscript-loader.git#updates",
     "elm": "^0.18.0",
     "elm-test": "^0.18.2",
     "elm-webpack-loader": "^4.2.0",

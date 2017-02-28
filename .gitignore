@@ -12,6 +12,9 @@ bower_components
 .DS_Store
 .tmp
 
+# ElixirScript
+tests/elixirscript/out
+
 # Elm
 # elm-package generated files
 elm-stuff

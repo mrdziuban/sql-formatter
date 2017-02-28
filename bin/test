@@ -10,6 +10,7 @@ function runTests {
   RESULT+=$?
 }
 
+runTests 'ElixirScript' $npm_bin/mocha --compilers js:babel-core/register tests/elixirscript/*.js
 runTests 'Elm' $npm_bin/elm-test --compile $npm_bin/elm-make tests/elm/Main.elm
 runTests 'ES6' $npm_bin/mocha --compilers js:babel-core/register tests/es6/**/*.js
 runTests 'Opal' bundle exec rake SPEC_OPTS='--color --format documentation'
