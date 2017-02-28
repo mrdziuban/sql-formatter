@@ -6,11 +6,11 @@
   "license": "UNLICENSED",
   "private": true,
   "scripts": {
-    "compile": "webpack --progress",
-    "dev": "webpack-dev-server",
-    "dist": "webpack --progress --env.production",
-    "test": "bin/test",
-    "watch": "webpack --progress --watch"
+    "compile": "bundle exec webpack --progress",
+    "dev": "bundle exec webpack-dev-server --progress",
+    "dist": "bundle exec webpack --progress --env.production",
+    "test": "bundle exec bin/test",
+    "watch": "bundle exec webpack --progress --watch"
   },
   "repository": {
     "type": "git",
@@ -33,6 +33,7 @@
     "html-webpack-plugin": "^2.28.0",
     "mocha": "^3.2.0",
     "node-sass": "^4.5.0",
+    "opal-webpack": "^1.0.9",
     "pulp": "^10.0.1",
     "purescript": "^0.10.7",
     "purescript-psa": "^0.4.0",

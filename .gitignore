@@ -20,6 +20,9 @@ tests/elm-stuff
 repl-temp-*
 tests/repl-temp-*
 
+# Opal
+.bundle
+
 # PureScript
 .psci
 .psci_modules

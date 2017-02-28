@@ -10,11 +10,14 @@ const WriteFilePlugin = require('write-file-webpack-plugin');
 const languages = {
   elm: 'Elm',
   es6: 'ES6',
+  opal: 'Opal',
   purescript: 'PureScript'
 };
 
 module.exports = function(env) {
   const prod = env && env.production;
+  process.env.OPAL_USE_BUNDLER = true;
+  process.env.OPAL_LOAD_PATH = path.join(__dirname, 'opal', 'src');
 
   const base = {
     entry: Object.assign(
@@ -51,6 +54,10 @@ module.exports = function(env) {
               path.join(__dirname, 'purescript', 'src', '**', '*.purs')
             ]
           }
+        },
+        {
+          test: /\.rb$/,
+          loader: 'opal-webpack'
         },
         {
           test: /\.scss$/,
