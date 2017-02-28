@@ -14,6 +14,7 @@ runTests 'ElixirScript' $npm_bin/mocha --compilers js:babel-core/register test/e
 runTests 'Elm' $npm_bin/elm-test --compile $npm_bin/elm-make test/elm/Main.elm
 runTests 'ES6' $npm_bin/mocha --compilers js:babel-core/register test/es6/**/*.js
 runTests 'Opal' bundle exec rake SPEC_OPTS='--color --format documentation'
+runTests 'PHP' phpunit --colors always --bootstrap php/src/SQLFormatter.php test/php/SQLFormatterTest.php
 runTests 'PureScript' $npm_bin/psa -o test/purescript/output \
                         --psc=$npm_bin/psc \
                         'bower_components/purescript-*/src/**/*.purs' \

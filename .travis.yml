@@ -23,6 +23,8 @@ addons:
   apt:
     packages:
       - oracle-java8-installer
+      - php5
+      - php5-cli
 before_install:
   # Node
   - nvm install 7.6
@@ -34,6 +36,11 @@ before_install:
   - mkdir -p "$HOME/.elixirscript/$EXS_VERSION"
   - curl -o- -L https://s3.amazonaws.com/mrdziuban-resources/elixirscript-$EXS_VERSION.tar.gz -o "$HOME/.elixirscript/elixirscript-$EXS_VERSION.tar.gz" | tar xvzf - -C "$HOME/.elixirscript/$EXS_VERSION"
   - export PATH="$HOME/.elixirscript/$EXS_VERSION/dist/elixirscript/bin:$PATH"
+  # PHP.js
+  - mkdir -p "$HOME/.phpunit/bin"
+  - curl -L https://phar.phpunit.de/phpunit-4.8.phar -o "$HOME/.phpunit/bin/phpunit"
+  - chmod +x "$HOME/.phpunit/bin/phpunit"
+  - export PATH="$HOME/.phpunit/bin:$PATH"
   # Scala.js
   - mkdir -p "$HOME/.sbt-bin/$SBT_VERSION"
   - curl -o- -L https://dl.bintray.com/sbt/native-packages/sbt/$SBT_VERSION/sbt-$SBT_VERSION.tgz | tar xvzf - -C "$HOME/.sbt-bin/$SBT_VERSION" --strip-components 1
@@ -41,6 +48,7 @@ before_install:
   - export PATH="$HOME/.sbt-bin/$SBT_VERSION/bin:$JAVA_HOME/bin:$PATH"
 install:
   - yarn
+  - node node_modules/elm/install.js
   # PureScript
   - $(npm bin)/bower install
   # Opal

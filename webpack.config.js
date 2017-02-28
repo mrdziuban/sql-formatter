@@ -12,6 +12,7 @@ const _languages = {
   elm: 'Elm',
   es6: 'ES6',
   opal: 'Opal',
+  php: 'PHP.js',
   purescript: 'PureScript',
   scalajs: 'Scala.js'
 };
@@ -32,6 +33,7 @@ module.exports = (env) => {
   process.env.OPAL_LOAD_PATH = path.join(__dirname, 'opal', 'src');
 
   const base = {
+    node: { fs: 'empty' },
     entry: Object.assign(
       { main: path.join(__dirname, 'js', 'index.js') },
       Object.keys(languages).reduce((acc, lang) => {
@@ -47,14 +49,15 @@ module.exports = (env) => {
     },
     module: {
       rules: [
-        { test: /\.js$/, loader: 'babel-loader' },
+        { test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/ },
         { test: /\.ejs$/, loader: 'ejs-loader' },
         {
           test: /\.elm$/,
           exclude: [/elm-stuff/, /node_modules/],
-          loader: 'elm-webpack-loader?pathToMake=node_modules/.bin/elm-make&warn=true&yes=true'
+          loader: `elm-webpack-loader?pathToMake=${path.join(__dirname, 'node_modules', '.bin', 'elm-make')}&warn=true&yes=true`
         },
         { test: /\.exjs$/, loader: 'babel-loader!elixirscript-loader' },
+        { test: /\.php$/, loader: 'raw-loader' },
         {
           test: /\.purs$/,
           loader: 'purs-loader',
@@ -89,7 +92,7 @@ module.exports = (env) => {
         template: path.join(__dirname, 'index.ejs')
       })
     ],
-    resolve: { extensions: ['.js', '.ejs', '.elm', '.exjs', '.purs', '.rb', '.scala', '.scss'] }
+    resolve: { extensions: ['.js', '.ejs', '.elm', '.exjs', '.php', '.purs', '.rb', '.scala', '.scss'] }
   };
 
   return Object.defineProperty(merge(base,
