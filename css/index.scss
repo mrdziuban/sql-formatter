@@ -9,6 +9,7 @@ body {
 }
 nav {
   background-color: #3E78A6;
+  color: #fff;
   h1 > a {
     color: #fff;
     text-decoration: none;
@@ -16,6 +17,13 @@ nav {
       text-decoration: none;
       color: #fff;
     }
+  }
+  .fit-height {
+    line-height: 2.5rem;
+  }
+  select {
+    height: 2rem;
+    font-size: 1.1rem;
   }
 }
 #main {

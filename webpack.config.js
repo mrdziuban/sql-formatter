@@ -4,7 +4,6 @@ const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const SuppressChunksPlugin = require('suppress-chunks-webpack-plugin').default;
 const WriteFilePlugin = require('write-file-webpack-plugin');
 
 module.exports = function(env) {
@@ -56,8 +55,7 @@ module.exports = function(env) {
         { from: path.join(__dirname, 'index.html'), to: path.join(__dirname, 'dist', 'index.html') },
         { from: path.join(__dirname, 'img'), to: path.join(__dirname, 'dist', 'img') }
       ]),
-      new ExtractTextPlugin(path.join('css', 'bundle.css')),
-      new SuppressChunksPlugin(['main'])
+      new ExtractTextPlugin(path.join('css', 'bundle.css'))
     ]
   };
 

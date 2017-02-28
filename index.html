@@ -12,8 +12,12 @@
   </head>
   <body class="d-flex flex-column">
     <nav class="py-2 px-3 mb-4">
-      <div class="container">
+      <div class="container d-flex justify-content-between">
         <h1 class="mb-0"><a href="">SQL Formatter</a></h1>
+        <div class="fit-height">
+          <div class="h5 mb-0 mr-1 d-inline-block fit-height">Run with:</div>
+          <select id="languages"></select>
+        </div>
       </div>
     </nav>
     <div id="main"></div>
@@ -22,6 +26,36 @@
       &bull;
       <a href="https://github.com/mrdziuban/sql-formatter" class="text-muted">Source on GitHub</a>
     </footer>
-    <script src="js/elm.js"></script>
+    <script>
+      var langs = {
+        elm: { file: 'js/elm.js', name: 'Elm' },
+        purescript: { file: 'js/purescript.js', name: 'PureScript' }
+      };
+      var urlMatch = window.location.search.match(/lang=([^&]+)/);
+      var lang = urlMatch && urlMatch[1] && langs[urlMatch[1].toLowerCase()]
+        ? urlMatch[1].toLowerCase()
+        : Object.keys(langs)[0];
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = langs[lang].file;
+      document.body.appendChild(script);
+
+      var langSelect = document.getElementById('languages');
+      Object.keys(langs).forEach(function(l) {
+        var opt = document.createElement('option');
+        opt.value = l;
+        opt.innerText = langs[l].name;
+        langSelect.appendChild(opt);
+      });
+      langSelect.value = lang;
+
+      langSelect.onchange = function() {
+        window.location = window.location.protocol +
+          '//' + window.location.hostname +
+          (window.location.port ? ':' + window.location.port : '') +
+          window.location.pathname +
+          '?lang=' + langSelect.value;
+      };
+    </script>
   </body>
 </html>

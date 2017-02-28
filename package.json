@@ -31,7 +31,6 @@
     "purs-loader": "^2.3.0",
     "sass-loader": "^5.0.1",
     "style-loader": "^0.13.1",
-    "suppress-chunks-webpack-plugin": "0.0.4",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.3.0",
     "webpack-merge": "^2.6.1",
