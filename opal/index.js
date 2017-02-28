@@ -1,1 +1,1 @@
-require('./src/app.rb');
+require('./src/app');

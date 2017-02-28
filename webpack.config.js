@@ -67,10 +67,7 @@ module.exports = (env) => {
             ]
           }
         },
-        {
-          test: /\.rb$/,
-          loader: 'opal-loader'
-        },
+        { test: /\.rb$/, loader: 'opal-loader' },
         {
           test: /\.scss$/,
           loader: ExtractTextPlugin.extract({
@@ -89,7 +86,8 @@ module.exports = (env) => {
         filename: path.join(__dirname, 'dist', 'index.html'),
         template: path.join(__dirname, 'index.ejs')
       })
-    ]
+    ],
+    resolve: { extensions: ['.js', '.ejs', '.elm', '.exjs', '.purs', '.rb', '.scss'] }
   };
 
   return Object.defineProperty(merge(base,
