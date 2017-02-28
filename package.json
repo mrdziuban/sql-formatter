@@ -9,7 +9,7 @@
     "compile": "webpack --progress",
     "dev": "webpack-dev-server",
     "dist": "webpack --progress --env.production",
-    "test": "elm-test"
+    "test": "elm-test --compile node_modules/.bin/elm-make tests/elm/Main.elm"
   },
   "repository": {
     "type": "git",
