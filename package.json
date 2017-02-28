@@ -16,6 +16,7 @@
     "url": "git://github.com/mrdziuban/sql-formatter"
   },
   "devDependencies": {
+    "bower": "^1.8.0",
     "clean-webpack-plugin": "^0.1.15",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.26.1",
@@ -24,6 +25,9 @@
     "elm-webpack-loader": "^4.2.0",
     "extract-text-webpack-plugin": "^2.0.0-rc.3",
     "node-sass": "^4.5.0",
+    "purescript": "^0.10.7",
+    "purescript-psa": "^0.4.0",
+    "purs-loader": "^2.3.0",
     "sass-loader": "^5.0.1",
     "style-loader": "^0.13.1",
     "webpack": "^2.2.1",
