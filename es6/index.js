@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import formatSql from './sql-formatter';
 
 const defaultSpaces = 2;

@@ -10,6 +10,13 @@ function runTests {
   RESULT+=$?
 }
 
+function runIntegrationTests {
+  printf "\n\033[0;33mRunning integration tests for $1\033[0m\n\n"
+  SQL_FORMATTER_LANG="$1" $npm_bin/casperjs test test/integration/index.js
+  RESULT+=$?
+}
+
+# Unit tests
 runTests 'Dart' pub run test -r expanded test/dart
 runTests 'ElixirScript' $npm_bin/mocha --compilers js:babel-core/register test/elixirscript/*.js
 runTests 'Elm' $npm_bin/elm-test --compile $npm_bin/elm-make test/elm/Main.elm
@@ -24,5 +31,26 @@ runTests 'PureScript' $npm_bin/psa -o test/purescript/output \
                         'test/purescript/**/*.purs' \
                       && NODE_PATH=test/purescript/output node -e "require('Test.Main').main();"
 runTests 'Scala.js' sbt clean test
+
+# Integration tests
+set -e
+rm -rf dist
+npm run compile
+set +e
+
+($npm_bin/http-server -p 8000 dist) &
+server_pid=$!
+
+runIntegrationTests 'Dart'
+runIntegrationTests 'ElixirScript'
+runIntegrationTests 'Elm'
+runIntegrationTests 'ES6'
+runIntegrationTests 'GopherJS'
+runIntegrationTests 'Opal'
+runIntegrationTests 'PHP'
+runIntegrationTests 'PureScript'
+runIntegrationTests 'ScalaJS'
+
+kill $server_pid
 
 exit $RESULT
