@@ -8,7 +8,6 @@ before_cache:
   - find $HOME/.sbt -name '*.lock' -delete
 cache:
   bundler: true
-  yarn: true
   directories:
     - node_modules
     - bower_components
@@ -29,8 +28,6 @@ addons:
 before_install:
   # Node
   - nvm install 7.6
-  - curl -o- -sL https://yarnpkg.com/install.sh | bash
-  - export PATH="$HOME/.yarn/bin:$PATH"
   # Opal
   - rvm install 2.3.3
   # Dart
@@ -58,10 +55,7 @@ before_install:
   - export JAVA_HOME=/usr/lib/jvm/java-8-oracle
   - export PATH="$HOME/.sbt-bin/$SBT_VERSION/bin:$JAVA_HOME/bin:$PATH"
 install:
-  - yarn
-  # Manually run install scripts that Yarn messes up sometimes
-  - node node_modules/elm/install.js
-  - node node_modules/purescript/lib/install.js
+  - npm install
   # Dart
   - pub get
   # GopherJS
