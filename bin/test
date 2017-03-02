@@ -6,7 +6,7 @@ npm_bin=$(npm bin)
 
 function runTests {
   echo -e "\n\033[0;33mRunning $1 tests\n\n\t${@:2}\033[0m\n\n"
-  "${@:2}"
+  time "${@:2}"
   RESULT+=$?
 }
 
@@ -19,7 +19,7 @@ function runIntegrationTests {
 # Unit tests
 runTests 'Dart' pub run test -r expanded test/dart
 runTests 'ElixirScript' $npm_bin/mocha --compilers js:babel-core/register test/elixirscript/*.js
-if [ $TRAVIS == 'true' ]; then
+if [ "$TRAVIS" == 'true' ]; then
   runTests 'Elm' sysconfcpus -n 1 $npm_bin/elm-test --compile $npm_bin/elm-make test/elm/Main.elm
 else
   runTests 'Elm' $npm_bin/elm-test --compile $npm_bin/elm-make test/elm/Main.elm
