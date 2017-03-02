@@ -6,8 +6,6 @@ if [ $TRAVIS_TEST_RESULT != 0 ] || [ $TRAVIS_PULL_REQUEST != 'false' ] || [ $TRA
   exit 0
 fi
 
-npm run dist
-
 GITHUB_REPO="https://${GITHUB_TOKEN}@github.com/mrdziuban/sql-formatter.git"
 
 commit=$(git rev-parse --short --verify HEAD)

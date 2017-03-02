@@ -28,18 +28,22 @@ runTests 'ES6' $npm_bin/mocha --compilers js:babel-core/register test/es6/**/*.j
 runTests 'GopherJS' go test -v gopherjs/src/*.go
 runTests 'Opal' bundle exec rake SPEC_OPTS='--color --format documentation'
 runTests 'PHP' phpunit --colors always --bootstrap php/src/SQLFormatter.php test/php/SQLFormatterTest.php
-runTests 'PureScript' $npm_bin/psa -o test/purescript/output \
-                        --psc=$npm_bin/psc \
-                        'bower_components/purescript-*/src/**/*.purs' \
-                        'purescript/src/**/*.purs' \
-                        'test/purescript/**/*.purs' \
-                      && NODE_PATH=test/purescript/output node -e "require('Test.Main').main();"
+if [ "$TRAVIS" == 'true' ]; then
+  runTests 'PureScript' sysconfcpus -n 1 $npm_bin/pulp run -I purescript/src --src-path test/purescript -o test/purescript/output -m 'Test.Main'
+else
+  runTests 'PureScript' $npm_bin/pulp run -I purescript/src --src-path test/purescript -o test/purescript/output -m 'Test.Main'
+fi
 runTests 'Scala.js' sbt clean test
 
 # Integration tests
 set -e
-rm -rf dist
-npm run compile
+if [ "$TRAVIS" == 'true' ]; then
+  # Build Elm and PureScript with 1 CPU to fix performance issues
+  sysconfcpus -n 1 npm run dist -- --env.only elm,purescript
+  CLEAN_DIST=false npm run dist -- --env.exclude elm,purescript
+else
+  npm run dist
+fi
 set +e
 
 ($npm_bin/http-server -p 8000 dist) &

@@ -131,14 +131,13 @@ module.exports = (env) => {
   return Object.defineProperty(merge(base,
     prod ? {
       plugins: [
-        new CleanWebpackPlugin([path.join(__dirname, 'dist')], { verbose: true }),
         new webpack.optimize.UglifyJsPlugin({
           compress: { screw_ie8: true, warnings: false },
           mangle: true,
           output: { comments: false },
           sourceMap: true
         })
-      ]
+      ].concat(process.env.CLEAN_DIST === 'false' ? [] : [new CleanWebpackPlugin([path.join(__dirname, 'dist')], { verbose: true })])
     } : {
       devtool: '#source-map',
       devServer: {
