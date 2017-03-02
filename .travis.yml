@@ -17,6 +17,7 @@ cache:
     - $HOME/.sbt/boot
     - $HOME/.pub-cache
     - $HOME/.phantomjs
+    - $HOME/.sysconfcpus
 branches:
   only:
     - master
@@ -27,10 +28,22 @@ addons:
       - php5
       - php5-cli
 before_install:
+  - |
+    if [ ! -d "$HOME/.sysconfcpus/bin" ]; then
+      mkdir "$HOME/.sysconfcpus"
+      git clone https://github.com/obmarg/libsysconfcpus.git "$HOME/.sysconfcpus/libsysconfcpus"
+      pushd "$HOME/.sysconfcpus/libsysconfcpus"
+      ./configure --prefix="$HOME/.sysconfcpus"
+      make && make install
+      popd
+    fi
+  - export PATH="$HOME/.sysconfcpus/bin:$PATH"
   # Node
   - nvm install 7.6
   # Opal
+  - if [ -f node_modules/.bin/which ]; then mv node_modules/.bin/which node_modules/.bin/which.backup; fi
   - rvm install 2.3.3
+  - if [ -f node_modules/.bin/which.backup ]; then mv node_modules/.bin/which.backup node_modules/.bin/which; fi
   # Dart
   - mkdir -p "$HOME/.dart"
   - curl -sL https://storage.googleapis.com/dart-archive/channels/stable/release/1.22.1/sdk/dartsdk-linux-x64-release.zip -o "$HOME/.dart/dart.zip"
