@@ -19,7 +19,7 @@ function runIntegrationTests {
 # Unit tests
 runTests 'Dart' pub run test -r expanded test/dart
 runTests 'ElixirScript' $npm_bin/mocha --compilers js:babel-core/register test/elixirscript/*.js
-if hash sysconfcpus 2>/dev/null; then
+if [ $TRAVIS == 'true' ]; then
   runTests 'Elm' sysconfcpus -n 1 $npm_bin/elm-test --compile $npm_bin/elm-make test/elm/Main.elm
 else
   runTests 'Elm' $npm_bin/elm-test --compile $npm_bin/elm-make test/elm/Main.elm

@@ -85,7 +85,8 @@ module.exports = (env) => {
         {
           test: /\.elm$/,
           exclude: [/elm-stuff/, /node_modules/],
-          loader: `elm-webpack-loader?pathToMake=${path.join(__dirname, 'node_modules', '.bin', 'elm-make')}&warn=true&yes=true`
+          loader: `elm-webpack-loader?pathToMake=${path.join(__dirname, 'node_modules', '.bin', 'elm-make')}` +
+                    `&warn=true&yes=true${process.env.TRAVIS === 'true' ? '&maxInstances=1' : ''}`
         },
         { test: /\.exjs$/, loader: 'babel-loader!elixirscript-loader' },
         { test: /\.go$/, loader: 'gopherjs-loader' },
