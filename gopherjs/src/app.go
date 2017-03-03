@@ -1,6 +1,10 @@
 package main
 
-import "github.com/gopherjs/gopherjs/js"
+import (
+	"strconv"
+
+	"github.com/gopherjs/gopherjs/js"
+)
 
 func main() {
 	render()
@@ -27,7 +31,12 @@ func render() {
 }
 
 func updateOutput(input *js.Object, output *js.Object, spaces *js.Object) func() {
-	return func() { output.Set("value", formatSql(input.Get("value").String(), 2)) }
+	return func() {
+		spacesStr := spaces.Get("value").String()
+		spacesInt, err := strconv.Atoi(spacesStr)
+		if err != nil { spacesInt = 2 }
+		output.Set("value", formatSql(input.Get("value").String(), spacesInt))
+	}
 }
 
 func seletOutput(output *js.Object) func() {
