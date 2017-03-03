@@ -46,6 +46,7 @@
     "purescript-psa": "^0.4.0",
     "purs-loader": "^2.3.0",
     "raw-loader": "^0.5.1",
+    "rust-emscripten-loader": "git+https://github.com/mrdziuban/rust-emscripten-loader.git",
     "sass-loader": "^6.0.1",
     "scalajs-loader": "git+https://github.com/mrdziuban/scalajs-loader.git",
     "style-loader": "^0.13.1",
