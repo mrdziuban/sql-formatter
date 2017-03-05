@@ -18,6 +18,7 @@ cache:
     - $HOME/.pub-cache
     - $HOME/.phantomjs
     - $HOME/.sysconfcpus
+    - $HOME/.cargo
 branches:
   only:
     - master
@@ -29,8 +30,9 @@ addons:
       - php5-cli
 before_install:
   - |
+    set -e
     if [ ! -d "$HOME/.sysconfcpus/bin" ]; then
-      mkdir "$HOME/.sysconfcpus"
+      mkdir -p "$HOME/.sysconfcpus"
       git clone https://github.com/obmarg/libsysconfcpus.git "$HOME/.sysconfcpus/libsysconfcpus"
       pushd "$HOME/.sysconfcpus/libsysconfcpus"
       ./configure --prefix="$HOME/.sysconfcpus"
@@ -72,6 +74,9 @@ before_install:
   - mkdir -p "$HOME/.phantomjs"
   - if [ ! -f "$HOME/.phantomjs/bin/phantomjs" ]; then curl -o- -sL https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2 | tar xjf - -C "$HOME/.phantomjs" --strip-components 1; fi
   - export PATH="$HOME/.phantomjs/bin:$PATH"
+  # Rust
+  - if [ ! -f "$HOME/.cargo/env" ]; then curl https://sh.rustup.rs -sSf | sh -s -- -y; fi
+  - source "$HOME/.cargo/env"
 install:
   - npm install
   # Dart

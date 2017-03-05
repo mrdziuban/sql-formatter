@@ -1,0 +1,4 @@
+[target.asmjs-unknown-emscripten]
+rustflags = [
+  "-Clink-args=-O3 --memory-init-file 0",
+]

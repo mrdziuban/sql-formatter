@@ -41,6 +41,10 @@ const _languages = {
     name: 'PureScript',
     link: 'http://www.purescript.org/'
   },
+  rust: {
+    name: 'Rust',
+    link: 'https://users.rust-lang.org/t/compiling-to-the-web-with-rust-and-emscripten/7627'
+  },
   scalajs: {
     name: 'Scala.js',
     link: 'http://www.scala-js.org/'
@@ -105,6 +109,7 @@ module.exports = (env) => {
           }
         },
         { test: /\.rb$/, loader: 'opal-loader' },
+        { test: /\.rs$/, loader: 'rust-emscripten-loader', query: { release: prod } },
         { test: /\.scala$/, loader: 'scalajs-loader' },
         {
           test: /\.scss$/,
@@ -125,7 +130,7 @@ module.exports = (env) => {
         template: path.join(__dirname, 'index.ejs')
       })
     ],
-    resolve: { extensions: ['.js', '.dart', '.ejs', '.elm', '.exjs', '.go', '.php', '.purs', '.rb', '.scala', '.scss'] }
+    resolve: { extensions: ['.js', '.dart', '.ejs', '.elm', '.exjs', '.go', '.php', '.purs', '.rb', '.rs', '.scala', '.scss'] }
   };
 
   return Object.defineProperty(merge(base,
