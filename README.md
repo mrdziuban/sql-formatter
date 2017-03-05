@@ -1,5 +1,30 @@
 # SQL Formatter
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Setup](#setup)
+  - [Dart](#dart)
+  - [ElixirScript](#elixirscript)
+  - [Elm](#elm)
+  - [ES6](#es6)
+  - [GopherJS](#gopherjs)
+  - [Opal](#opal)
+  - [PHP.js](#phpjs)
+  - [PureScript](#purescript)
+  - [Rust](#rust)
+  - [Scala.js](#scalajs)
+- [Development](#development)
+  - [Compile](#compile)
+    - [Compile certain languages](#compile-certain-languages)
+  - [Run](#run)
+  - [Test](#test)
+  - [Build for production](#build-for-production)
+- [Deployment](#deployment)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 This is a simple SQL formatter that handles formatting whitespace and capitalization of keywords. I originally wrote
 it for the purpose of learning Elm, but it soon became a project where I could try out languages that I'm
 unfamiliar with and see how many different languages can be compiled down to JavaScript. Most of the languages used,
@@ -16,10 +41,10 @@ The current languages are:
 - [ES6](#es6)
 - [GopherJS](#gopherjs)
 - [Opal](#opal)
-- [PHP.js](#php-js)
+- [PHP.js](#phpjs)
 - [PureScript](#purescript)
 - [Rust](#rust)
-- [Scala.js](#scala-js)
+- [Scala.js](#scalajs)
 
 Check it out at [http://mattdziuban.com/sql-formatter/](http://mattdziuban.com/sql-formatter/).
 
@@ -70,7 +95,7 @@ The ES6 build doesn't require any additional dependencies!
 
 ### GopherJS
 
-First, [install Go](https://golang.org/dl/), then run:
+First, [install Go 1.8](https://golang.org/dl/), then run:
 
 ```bash
 go get -u github.com/gopherjs/gopherjs
@@ -86,7 +111,14 @@ bundle install
 
 ### PHP.js
 
-Install PHP (any version 5.3-5.6 should work fine).
+Install PHP (any version 5.3-5.6 should work fine), then install PHPUnit:
+
+```bash
+mkdir -p "$HOME/.phpunit/bin"
+curl -sL https://phar.phpunit.de/phpunit-4.8.phar -o "$HOME/.phpunit/bin/phpunit"
+chmod +x "$HOME/.phpunit/bin/phpunit"
+export PATH="$HOME/.phpunit/bin:$PATH"
+```
 
 ### PureScript
 
