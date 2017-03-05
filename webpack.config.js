@@ -55,8 +55,15 @@ module.exports = (env) => {
   const prod = env && env.production;
 
   // Filter languages based on CLI args
-  const exclude = env && env.exclude ? env.exclude.split(',').map(e => e.trim()).filter(e => e !== '') : [];
-  const only = env && env.only ? env.only.split(',').map(e => e.trim()).filter(e => e !== '') : [];
+  const getLangs = (str) => {
+    return str.split(',').map(e => {
+      const t = e.trim().toLowerCase();
+      return t === 'dart' ? 'google' : t;
+    }).filter(e => e !== '');
+  };
+
+  const exclude = env && env.exclude ? getLangs(env.exclude) : [];
+  const only = env && env.only ? getLangs(env.only) : [];
 
   const langsToInclude = only.length > 0 ? only : Object.keys(_languages).filter(l => exclude.indexOf(l) === -1);
   const languages = langsToInclude.reduce((acc, l) => { acc[l] = _languages[l]; return acc; }, {})
