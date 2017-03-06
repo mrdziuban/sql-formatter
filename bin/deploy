@@ -2,7 +2,7 @@
 
 set -e
 
-if [ $TRAVIS_TEST_RESULT != 0 ] || [ $TRAVIS_PULL_REQUEST != 'false' ] || [ $TRAVIS_BRANCH != 'master' ]; then
+if [ "$TRAVIS_TEST_RESULT" != 0 ] || [ "$TRAVIS_PULL_REQUEST" != 'false' ] || [ "$TRAVIS_BRANCH" != 'master' ]; then
   exit 0
 fi
 
