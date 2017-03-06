@@ -214,4 +214,4 @@ npm run dist
 
 ## Deployment
 
-Deployment to GitHub pages is automated via Travis CI on builds on the master branch.
+Deployment to GitHub pages is [scripted](bin/deploy).

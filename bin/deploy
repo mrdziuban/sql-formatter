@@ -2,21 +2,15 @@
 
 set -e
 
-if [ "$TRAVIS_TEST_RESULT" != 0 ] || [ "$TRAVIS_PULL_REQUEST" != 'false' ] || [ "$TRAVIS_BRANCH" != 'master' ]; then
-  exit 0
-fi
+npm run dist
 
-GITHUB_REPO="https://${GITHUB_TOKEN}@github.com/mrdziuban/sql-formatter.git"
-
-commit=$(git rev-parse --short --verify HEAD)
+repo="git@github.com/mrdziuban/sql-formatter.git"
+commit="$(git rev-parse --short --verify HEAD)"
 
 cd dist
 
 git init
-git config user.name 'Travis CI'
-git config user.email 'mrdziuban+travis@gmail.com'
-
-git remote add upstream "$GITHUB_REPO"
+git remote add upstream "$repo"
 git fetch upstream
 git reset upstream/gh-pages
 

@@ -42,10 +42,10 @@ runTests 'Scala.js' sbt clean test
 set -e
 if [ "$TRAVIS" == 'true' ]; then
   # Build Elm and PureScript with 1 CPU to fix performance issues
-  sysconfcpus -n 1 npm run dist -- --env.only elm,purescript
-  CLEAN_DIST=false npm run dist -- --env.exclude elm,purescript,rust
+  sysconfcpus -n 1 npm run compile -- --env.only elm,purescript
+  CLEAN_DIST=false npm run compile -- --env.exclude elm,purescript,rust
 else
-  npm run dist
+  npm run compile
 fi
 set +e
 
