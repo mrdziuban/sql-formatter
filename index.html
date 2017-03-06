@@ -12,16 +12,53 @@
   </head>
   <body class="d-flex flex-column">
     <nav class="py-2 px-3 mb-4">
-      <div class="container">
+      <div class="container d-flex justify-content-between">
         <h1 class="mb-0"><a href="">SQL Formatter</a></h1>
+        <div class="fit-height">
+          <div class="h5 mb-0 mr-1 d-inline-block fit-height">Run with:</div>
+          <select id="languages"></select>
+        </div>
       </div>
     </nav>
-    <div id="elm"></div>
+    <div id="main"></div>
     <footer class="p-2 text-center text-muted">
-      Built by <a href="http://mattdziuban.com" class="text-muted">Matt Dziuban</a>
-      &bull;
-      <a href="https://github.com/mrdziuban/sql-formatter" class="text-muted">Source on GitHub</a>
+      <div id="powered-by"></div>
+      <div>
+        Built by <a href="http://mattdziuban.com" class="text-muted">Matt Dziuban</a>
+        &bull;
+        <a href="https://github.com/mrdziuban/sql-formatter" class="text-muted">Source on GitHub</a>
+      </div>
     </footer>
-    <script src="js/bundle.js"></script>
+    <script>
+      var langs = {"google":{"name":"Dart","link":"https://www.dartlang.org/","in":"dart"},"elixirscript":{"name":"ElixirScript","link":"https://github.com/elixirscript/elixirscript"},"es6":{"name":"ES6","link":"https://developer.mozilla.org/en-US/docs/Web/JavaScript/New_in_JavaScript/ECMAScript_2015_support_in_Mozilla"},"gopherjs":{"name":"GopherJS","link":"https://github.com/gopherjs/gopherjs"},"opal":{"name":"Opal","link":"http://opalrb.org/"},"php":{"name":"PHP.js","link":"http://phpjs.hertzen.com/"},"scalajs":{"name":"Scala.js","link":"http://www.scala-js.org/"}};
+      var urlMatch = window.location.search.match(/lang=([^&]+)/);
+      var lang = urlMatch && urlMatch[1] && langs[urlMatch[1].toLowerCase()]
+        ? urlMatch[1].toLowerCase()
+        : Object.keys(langs)[Math.floor(Math.random() * Object.keys(langs).length)];
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = 'js/' + lang + '.js';
+      document.body.appendChild(script);
+
+      var langSelect = document.getElementById('languages');
+      Object.keys(langs).forEach(function(l) {
+        var opt = document.createElement('option');
+        opt.value = l;
+        opt.innerText = langs[l].name;
+        langSelect.appendChild(opt);
+      });
+      langSelect.value = lang;
+
+      langSelect.onchange = function() {
+        window.location = window.location.protocol +
+          '//' + window.location.hostname +
+          (window.location.port ? ':' + window.location.port : '') +
+          window.location.pathname +
+          '?lang=' + langSelect.value;
+      };
+
+      document.getElementById('powered-by').innerHTML = '<a href="' + langs[lang].link + '" ' +
+        'class="text-muted" target="_blank">Powered by ' + langs[lang].name + '</a>';
+    </script>
   </body>
 </html>
