@@ -1,0 +1,25 @@
+{
+  "name": "sql-formatter",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "output",
+    "purescript/output",
+    "test/purescript/output"
+  ],
+  "dependencies": {
+    "purescript-dom": "^3.5.1",
+    "purescript-prelude": "^2.4.0",
+    "purescript-eff": "^2.0.0",
+    "purescript-maybe": "^2.0.1",
+    "purescript-strings": "^2.1.0",
+    "purescript-integers": "^2.1.1",
+    "purescript-arrays": "^3.2.1",
+    "purescript-foreign": "^3.2.0"
+  },
+  "devDependencies": {
+    "purescript-psci-support": "^2.0.0",
+    "purescript-test-unit": "^10.1.0"
+  }
+}

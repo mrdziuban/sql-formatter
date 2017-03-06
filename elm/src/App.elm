@@ -1,7 +1,7 @@
 port module App exposing (..)
 
-import Html exposing (..)
-import Html.Attributes exposing (..)
+import Html exposing (div, Html, input, label, text, textarea)
+import Html.Attributes exposing (class, for, id, placeholder, readonly, rows, type_, value)
 import Html.Events exposing (onClick, onFocus, onInput)
 import Result
 import SQLFormatter
@@ -61,7 +61,7 @@ view model =
   div [ class "container" ]
   [ div [ class "form-inline mb-3" ]
     [ label [ for "sql-spaces", class "h4 mr-3" ] [ text "Spaces" ]
-    , input [ id "sql-spaces", class "form-control", type_ "number", value (toString model.spaces), onInput Spaces ] []
+    , input [ id "sql-spaces", class "form-control", type_ "number", value (toString model.spaces), Html.Attributes.min "0", onInput Spaces ] []
     ]
   , div [ class "form-group" ]
     [ label [ for "sql-input", class "d-flex h4 mb-3" ] [ text "Input" ]

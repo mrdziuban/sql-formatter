@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+
+declare -i RESULT=0
+
+root_dir="$(dirname $(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd))"
+npm_bin=$(npm bin)
+
+function runTests {
+  echo -e "\n\033[0;33mRunning $1 tests\n\n\t${@:2}\033[0m\n\n"
+  time "${@:2}"
+  RESULT+=$?
+  cd $root_dir
+}
+
+function runIntegrationTests {
+  printf "\n\033[0;33mRunning integration tests for $1\033[0m\n\n"
+  SQL_FORMATTER_LANG="$1" $npm_bin/casperjs test "$root_dir/test/integration/index.js"
+  RESULT+=$?
+}
+
+# Unit tests
+runTests 'Dart' pub run test -r expanded test/dart
+runTests 'ElixirScript' $npm_bin/mocha --compilers js:babel-core/register test/elixirscript/*.js
+if [ "$TRAVIS" == 'true' ]; then
+  runTests 'Elm' sysconfcpus -n 1 $npm_bin/elm-test --compile $npm_bin/elm-make test/elm/Main.elm
+else
+  runTests 'Elm' $npm_bin/elm-test --compile $npm_bin/elm-make test/elm/Main.elm
+fi
+runTests 'ES6' $npm_bin/mocha --compilers js:babel-core/register test/es6/**/*.js
+runTests 'GopherJS' go test -v gopherjs/src/*.go
+runTests 'Opal' bundle exec rake SPEC_OPTS='--color --format documentation'
+runTests 'PHP' phpunit --colors always --bootstrap php/src/SQLFormatter.php test/php/SQLFormatterTest.php
+if [ "$TRAVIS" == 'true' ]; then
+  runTests 'PureScript' sysconfcpus -n 1 $npm_bin/pulp run -I purescript/src --src-path test/purescript -o test/purescript/output -m 'Test.Main'
+else
+  runTests 'PureScript' $npm_bin/pulp run -I purescript/src --src-path test/purescript -o test/purescript/output -m 'Test.Main'
+fi
+runTests 'Rust' /bin/bash -c 'cd '$root_dir'/rust && cargo test --no-fail-fast --color always'
+runTests 'Scala.js' sbt clean test
+
+# Integration tests
+set -e
+if [ "$TRAVIS" == 'true' ]; then
+  # Build Elm and PureScript with 1 CPU to fix performance issues
+  sysconfcpus -n 1 npm run dist -- --env.only elm,purescript
+  CLEAN_DIST=false npm run dist -- --env.exclude elm,purescript,rust
+else
+  npm run dist
+fi
+set +e
+
+($npm_bin/http-server -p 8000 dist) &
+server_pid=$!
+
+runIntegrationTests 'Dart'
+runIntegrationTests 'ElixirScript'
+runIntegrationTests 'Elm'
+runIntegrationTests 'ES6'
+runIntegrationTests 'GopherJS'
+runIntegrationTests 'Opal'
+runIntegrationTests 'PHP'
+runIntegrationTests 'PureScript'
+if [ "$TRAVIS" != 'true' ]; then runIntegrationTests 'Rust'; fi
+runIntegrationTests 'ScalaJS'
+
+kill $server_pid
+
+exit $RESULT

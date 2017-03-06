@@ -1,19 +1,97 @@
-language: node_js
-node_js:
-  - '7.5'
+language: elixir
+elixir:
+  - 1.4.2
+otp_release:
+  - 19.2
+before_cache:
+  - find $HOME/.ivy2 -name 'ivydata-*.properties' -delete
+  - find $HOME/.sbt -name '*.lock' -delete
 cache:
-  yarn: true
+  bundler: true
   directories:
     - node_modules
+    - bower_components
     - elm-stuff/build-artifacts
-    - tests/elm-stuff/build-artifacts
+    - test/elm/elm-stuff/build-artifacts
+    - $HOME/.ivy2/cache
+    - $HOME/.sbt/boot
+    - $HOME/.pub-cache
+    - $HOME/.phantomjs
+    - $HOME/.sysconfcpus
+    - $HOME/.cargo
 branches:
   only:
     - master
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
+      - php5
+      - php5-cli
+before_install:
+  - |
+    set -e
+    if [ ! -d "$HOME/.sysconfcpus/bin" ]; then
+      mkdir -p "$HOME/.sysconfcpus"
+      git clone https://github.com/obmarg/libsysconfcpus.git "$HOME/.sysconfcpus/libsysconfcpus"
+      pushd "$HOME/.sysconfcpus/libsysconfcpus"
+      ./configure --prefix="$HOME/.sysconfcpus"
+      make && make install
+      popd
+    fi
+  - export PATH="$HOME/.sysconfcpus/bin:$PATH"
+  # Node
+  - nvm install 7.6
+  # Opal
+  - if [ -f node_modules/.bin/which ]; then mv node_modules/.bin/which node_modules/.bin/which.backup; fi
+  - rvm install 2.3.3
+  - if [ -f node_modules/.bin/which.backup ]; then mv node_modules/.bin/which.backup node_modules/.bin/which; fi
+  # Dart
+  - mkdir -p "$HOME/.dart"
+  - curl -sL https://storage.googleapis.com/dart-archive/channels/stable/release/1.22.1/sdk/dartsdk-linux-x64-release.zip -o "$HOME/.dart/dart.zip"
+  - unzip -q "$HOME/.dart/dart.zip" -d "$HOME/.dart"
+  - export PATH="$HOME/.dart/dart-sdk/bin:$PATH"
+  # ElixirScript
+  - mkdir -p "$HOME/.elixirscript/$EXS_VERSION"
+  - curl -o- -sL https://s3.amazonaws.com/mrdziuban-resources/elixirscript-$EXS_VERSION.tar.gz -o "$HOME/.elixirscript/elixirscript-$EXS_VERSION.tar.gz" | tar xzf - -C "$HOME/.elixirscript/$EXS_VERSION"
+  - export PATH="$HOME/.elixirscript/$EXS_VERSION/dist/elixirscript/bin:$PATH"
+  # GopherJS
+  - mkdir -p "$HOME/.go"
+  - curl -o- -sL https://storage.googleapis.com/golang/go1.8.linux-amd64.tar.gz | tar xzf - -C "$HOME/.go"
+  - export GOROOT="$HOME/.go/go"
+  - export PATH="$GOROOT/bin:$HOME/go/bin:$PATH"
+  # PHP.js
+  - mkdir -p "$HOME/.phpunit/bin"
+  - curl -sL https://phar.phpunit.de/phpunit-4.8.phar -o "$HOME/.phpunit/bin/phpunit"
+  - chmod +x "$HOME/.phpunit/bin/phpunit"
+  - export PATH="$HOME/.phpunit/bin:$PATH"
+  # Scala.js
+  - mkdir -p "$HOME/.sbt-bin/$SBT_VERSION"
+  - curl -o- -sL https://dl.bintray.com/sbt/native-packages/sbt/$SBT_VERSION/sbt-$SBT_VERSION.tgz | tar xzf - -C "$HOME/.sbt-bin/$SBT_VERSION" --strip-components 1
+  - export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+  - export PATH="$HOME/.sbt-bin/$SBT_VERSION/bin:$JAVA_HOME/bin:$PATH"
+  # PhantomJS
+  - mkdir -p "$HOME/.phantomjs"
+  - if [ ! -f "$HOME/.phantomjs/bin/phantomjs" ]; then curl -o- -sL https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2 | tar xjf - -C "$HOME/.phantomjs" --strip-components 1; fi
+  - export PATH="$HOME/.phantomjs/bin:$PATH"
+  # Rust
+  - if [ ! -f "$HOME/.cargo/env" ]; then curl https://sh.rustup.rs -sSf | sh -s -- -y; fi
+  - source "$HOME/.cargo/env"
+install:
+  - npm install
+  # Dart
+  - pub get
+  # GopherJS
+  - go get -u github.com/gopherjs/gopherjs
+  # PureScript
+  - $(npm bin)/bower --silent install
+  # Opal
+  - bundle install --jobs=3 --retry=3 --deployment
 script:
   - npm run test
-  - npm run dist
-after_success: test $TRAVIS_PULL_REQUEST == 'false' && test $TRAVIS_BRANCH == 'master' && bin/deploy
+  - if [ "$TRAVIS_TEST_RESULT" == 0 ] && [ "$TRAVIS_PULL_REQUEST" == 'false' ] && [ "$TRAVIS_BRANCH" == 'master' ]; then bin/deploy; fi
 env:
   global:
-    secure: Nzcx0q8WGAKiVGDlCs3smE5ujLk/jHsjnJ4gHKPDGPfReVNaQ63cXXTVjLRuJtUY1EmdUfVVXFqSKCXaKiyZI/uIt++NgGZnh85/a1DnXj6/bltZBRsAR1WdPT/cddthQvUHwVX7sSTKvqZly7e4TGaM7Ygv6L+PJ20+/yWZIhz1YrJqgGnkiUTzMBRaOAIPwutOwym8Ze2hLq56kd8a4T1VMh5sKhnPO3ONv4q6d+wk7Ie0AeaqZv6GSIBePOJ7vlGyTDX0AAKaehdJ22hNEywTvceJ5ej77Yof1/loAra8KdDSP86dXbbb40xZ6vOCyCx/wELTFGytIM2HCJNO9vUwSYuG/nI10VCqKMQ++sZMuOcSY0W3E/B11/s3wuww5wo+P2jhRo/MIFGOEIwAu3GD7RLE+H4LTudLDYsClLpoGyZIse7P+8iJUyzqJaG3hRIMdVtFn0NMdt7Ps2hof68rTDQj3bbhsHgl6G4aXvYO1TjglN7BLyBb4FhdUQa3sy/Dg+oRorCHoy4VO85Xx47aWA8KPkNATVdRrvDOFzATCx7VyGbs7G9hRzaOC55133EelsUoZ25ogz4qQr7tvyMI+t9lIT6I/ypB20pSCGkUI4yhyozl9YYmAozNS3/JNzpdsipPtvrsRUlFI50ig/onxhTg3AWN0XYnfB8uxBs=
+    - EXS_VERSION=56cb2c5
+    - SBT_VERSION=0.13.13
+    - secure: Nzcx0q8WGAKiVGDlCs3smE5ujLk/jHsjnJ4gHKPDGPfReVNaQ63cXXTVjLRuJtUY1EmdUfVVXFqSKCXaKiyZI/uIt++NgGZnh85/a1DnXj6/bltZBRsAR1WdPT/cddthQvUHwVX7sSTKvqZly7e4TGaM7Ygv6L+PJ20+/yWZIhz1YrJqgGnkiUTzMBRaOAIPwutOwym8Ze2hLq56kd8a4T1VMh5sKhnPO3ONv4q6d+wk7Ie0AeaqZv6GSIBePOJ7vlGyTDX0AAKaehdJ22hNEywTvceJ5ej77Yof1/loAra8KdDSP86dXbbb40xZ6vOCyCx/wELTFGytIM2HCJNO9vUwSYuG/nI10VCqKMQ++sZMuOcSY0W3E/B11/s3wuww5wo+P2jhRo/MIFGOEIwAu3GD7RLE+H4LTudLDYsClLpoGyZIse7P+8iJUyzqJaG3hRIMdVtFn0NMdt7Ps2hof68rTDQj3bbhsHgl6G4aXvYO1TjglN7BLyBb4FhdUQa3sy/Dg+oRorCHoy4VO85Xx47aWA8KPkNATVdRrvDOFzATCx7VyGbs7G9hRzaOC55133EelsUoZ25ogz4qQr7tvyMI+t9lIT6I/ypB20pSCGkUI4yhyozl9YYmAozNS3/JNzpdsipPtvrsRUlFI50ig/onxhTg3AWN0XYnfB8uxBs=

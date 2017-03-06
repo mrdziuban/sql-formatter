@@ -81,7 +81,7 @@ splitSql str tab =
 
 splitIfEven: Int -> String -> String -> List String
 splitIfEven i str tab =
-  if i % 2  == 0 then splitSql str tab else [ str ]
+  if i % 2 == 0 then splitSql str tab else [ str ]
 
 type alias Out =
   {

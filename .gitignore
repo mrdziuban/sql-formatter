@@ -6,18 +6,47 @@ npm-debug.log
 # Dependency directory
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 node_modules
+bower_components
 
-#OS STUFF
+# OS stuff
 .DS_Store
 .tmp
+
+# Dart
+build
+packages
+.buildlog
+.packages
+.project
+.pub
+
+# ElixirScript
+test/elixirscript/out
 
 # Elm
 # elm-package generated files
 elm-stuff
-tests/elm-stuff
+test/elm-stuff
 # elm-repl generated files
 repl-temp-*
-tests/repl-temp-*
+test/repl-temp-*
+
+# Opal
+.bundle
+
+# PureScript
+.psci
+.psci_modules
+purescript/output
+test/purescript/output
+
+# Scala.js
+target
+lib_managed
+src_managed
+project/boot
+.history
+.cache
 
 # Build
 dist

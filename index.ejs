@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html style="font-size: 13px;">
+  <head>
+    <title>SQL Formatter</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400|Fira+Mono">
+    <link rel="stylesheet" href="css/bundle.css">
+    <link rel="icon" href="img/favicon.png">
+    <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="img/apple-touch-icon-192.png">
+  </head>
+  <body class="d-flex flex-column">
+    <nav class="py-2 px-3 mb-4">
+      <div class="container d-flex justify-content-between">
+        <h1 class="mb-0"><a href="">SQL Formatter</a></h1>
+        <div class="fit-height">
+          <div class="h5 mb-0 mr-1 d-inline-block fit-height">Run with:</div>
+          <select id="languages"></select>
+        </div>
+      </div>
+    </nav>
+    <div id="main"></div>
+    <footer class="p-2 text-center text-muted">
+      <div id="powered-by"></div>
+      <div>
+        Built by <a href="http://mattdziuban.com" class="text-muted">Matt Dziuban</a>
+        &bull;
+        <a href="https://github.com/mrdziuban/sql-formatter" class="text-muted">Source on GitHub</a>
+      </div>
+    </footer>
+    <script>
+      var langs = <%= JSON.stringify(htmlWebpackPlugin.options.languages) %>;
+      var urlMatch = window.location.search.match(/lang=([^&]+)/);
+      var lang = urlMatch && urlMatch[1] && langs[urlMatch[1].toLowerCase()]
+        ? urlMatch[1].toLowerCase()
+        : Object.keys(langs)[Math.floor(Math.random() * Object.keys(langs).length)];
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = 'js/' + lang + '.js';
+      document.body.appendChild(script);
+
+      var langSelect = document.getElementById('languages');
+      Object.keys(langs).forEach(function(l) {
+        var opt = document.createElement('option');
+        opt.value = l;
+        opt.innerText = langs[l].name;
+        langSelect.appendChild(opt);
+      });
+      langSelect.value = lang;
+
+      langSelect.onchange = function() {
+        window.location = window.location.protocol +
+          '//' + window.location.hostname +
+          (window.location.port ? ':' + window.location.port : '') +
+          window.location.pathname +
+          '?lang=' + langSelect.value;
+      };
+
+      document.getElementById('powered-by').innerHTML = '<a href="' + langs[lang].link + '" ' +
+        'class="text-muted" target="_blank">Powered by ' + langs[lang].name + '</a>';
+    </script>
+  </body>
+</html>
