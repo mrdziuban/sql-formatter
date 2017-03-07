@@ -9,6 +9,7 @@
   - [ElixirScript](#elixirscript)
   - [Elm](#elm)
   - [ES6](#es6)
+  - [Fable](#fable)
   - [GopherJS](#gopherjs)
   - [Opal](#opal)
   - [PHP.js](#phpjs)
@@ -39,6 +40,7 @@ The current languages are:
 - [ElixirScript](#elixirscript)
 - [Elm](#elm)
 - [ES6](#es6)
+- [Fable](#fable)
 - [GopherJS](#gopherjs)
 - [Opal](#opal)
 - [PHP.js](#phpjs)
@@ -92,6 +94,10 @@ $(npm bin)/elm-package install
 ### ES6
 
 The ES6 build doesn't require any additional dependencies!
+
+### Fable
+
+Install F#. On Mac, you can run `brew install mono`. On Linux, [check out the docs](http://fsharp.org/use/linux/).
 
 ### GopherJS
 

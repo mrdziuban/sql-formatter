@@ -27,6 +27,7 @@ else
   runTests 'Elm' $npm_bin/elm-test --compile $npm_bin/elm-make test/elm/Main.elm
 fi
 runTests 'ES6' $npm_bin/mocha --compilers js:babel-core/register test/es6/**/*.js
+runTests 'Fable' /bin/bash -c $npm_bin'/fable test/fable/SQLFormatterTest.fsx --module commonjs --outDir test/fable/out && find test/fable/out/**/*Test.js -exec node {} \;'
 runTests 'GopherJS' go test -v gopherjs/src/*.go
 runTests 'Opal' bundle exec rake SPEC_OPTS='--color --format documentation'
 runTests 'PHP' phpunit --colors always --bootstrap php/src/SQLFormatter.php test/php/SQLFormatterTest.php
@@ -56,6 +57,7 @@ runIntegrationTests 'Dart'
 runIntegrationTests 'ElixirScript'
 runIntegrationTests 'Elm'
 runIntegrationTests 'ES6'
+runIntegrationTests 'Fable'
 runIntegrationTests 'GopherJS'
 runIntegrationTests 'Opal'
 runIntegrationTests 'PHP'

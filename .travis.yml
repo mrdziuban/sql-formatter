@@ -24,7 +24,12 @@ branches:
     - master
 addons:
   apt:
+    sources:
+      - mono
+      - mono-libtiff-compat
     packages:
+      - fsharp
+      - mono-devel
       - oracle-java8-installer
       - php5
       - php5-cli

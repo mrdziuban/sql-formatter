@@ -25,6 +25,10 @@ const _languages = {
     name: 'ES6',
     link: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/New_in_JavaScript/ECMAScript_2015_support_in_Mozilla'
   },
+  fable: {
+    name: 'Fable',
+    link: 'http://fable.io/'
+  },
   gopherjs: {
     name: 'GopherJS',
     link: 'https://github.com/gopherjs/gopherjs'
@@ -100,6 +104,7 @@ module.exports = (env) => {
                     `&warn=true&yes=true${process.env.TRAVIS === 'true' ? '&maxInstances=1' : ''}`
         },
         { test: /\.exjs$/, loader: 'babel-loader!elixirscript-loader' },
+        { test: /\.fsx$/, loader: 'babel-loader!fable-loader' },
         { test: /\.go$/, loader: 'gopherjs-loader' },
         { test: /\.php$/, loader: 'raw-loader' },
         {
@@ -137,7 +142,7 @@ module.exports = (env) => {
         template: path.join(__dirname, 'index.ejs')
       })
     ],
-    resolve: { extensions: ['.js', '.dart', '.ejs', '.elm', '.exjs', '.go', '.php', '.purs', '.rb', '.rs', '.scala', '.scss'] }
+    resolve: { extensions: ['.js', '.dart', '.ejs', '.elm', '.exjs', '.fsx', '.go', '.php', '.purs', '.rb', '.rs', '.scala', '.scss'] }
   };
 
   return Object.defineProperty(merge(base,
