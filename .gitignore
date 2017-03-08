@@ -31,6 +31,10 @@ test/elm-stuff
 repl-temp-*
 test/repl-temp-*
 
+# Fable
+fable/src/*.js
+test/fable/out
+
 # Opal
 .bundle
 

@@ -24,7 +24,12 @@ branches:
     - master
 addons:
   apt:
+    sources:
+      - mono
+      - mono-libtiff-compat
     packages:
+      - fsharp
+      - mono-devel
       - oracle-java8-installer
       - php5
       - php5-cli
@@ -77,6 +82,8 @@ before_install:
   # Rust
   - if [ ! -f "$HOME/.cargo/env" ]; then curl https://sh.rustup.rs -sSf | sh -s -- -y; fi
   - source "$HOME/.cargo/env"
+  - rustup toolchain install stable
+  - rustup default stable
 install:
   - npm install
   # Dart
