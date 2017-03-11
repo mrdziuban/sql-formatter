@@ -5,14 +5,14 @@ script.text = `
   if (typeof WebAssembly === 'object') {
     var Module = {};
     var req = new XMLHttpRequest();
-    req.open('GET', '/js/rust-wasm/out.wasm');
+    req.open('GET', 'js/rust-wasm/out.wasm');
     req.responseType = 'arraybuffer';
     req.send();
 
     req.onload = function() {
       Module.wasmBinary = req.response;
       var script = document.createElement('script');
-      script.src = '/js/rust-wasm/out.js';
+      script.src = 'js/rust-wasm/out.js';
       document.body.appendChild(script);
     };
   } else {
