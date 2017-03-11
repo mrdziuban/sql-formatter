@@ -4,7 +4,7 @@ set -e
 
 npm run dist
 
-repo="git@github.com/mrdziuban/sql-formatter.git"
+repo="git@github.com:mrdziuban/sql-formatter.git"
 commit="$(git rev-parse --short --verify HEAD)"
 
 cd dist
@@ -18,4 +18,4 @@ touch .
 
 git add -A .
 git commit -m "Generate GitHub pages for commit $commit"
-git push -q upstream HEAD:gh-pages
+git push upstream HEAD:gh-pages
