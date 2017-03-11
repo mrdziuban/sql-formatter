@@ -45,9 +45,17 @@ const _languages = {
     name: 'PureScript',
     link: 'http://www.purescript.org/'
   },
-  rust: {
-    name: 'Rust',
-    link: 'https://users.rust-lang.org/t/compiling-to-the-web-with-rust-and-emscripten/7627'
+  'rust-asmjs': {
+    name: 'Rust (asm.js)',
+    link: 'https://users.rust-lang.org/t/compiling-to-the-web-with-rust-and-emscripten/7627',
+    in: 'rust',
+    index: 'index-asmjs.js'
+  },
+  'rust-wasm': {
+    name: 'Rust (WebAssembly)',
+    link: 'https://users.rust-lang.org/t/compiling-to-the-web-with-rust-and-emscripten/7627',
+    in: 'rust',
+    index: 'index-wasm.js'
   },
   scalajs: {
     name: 'Scala.js',
@@ -82,7 +90,7 @@ module.exports = (env) => {
     entry: Object.assign(
       { main: path.join(__dirname, 'js', 'index.js') },
       Object.keys(languages).reduce((acc, lang) => {
-        acc[lang] = path.join(__dirname, (languages[lang].in || lang), 'index.js');
+        acc[lang] = path.join(__dirname, (languages[lang].in || lang), (languages[lang].index || 'index.js'));
         return acc;
       }, {})
     ),

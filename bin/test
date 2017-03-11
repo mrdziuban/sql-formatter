@@ -44,7 +44,7 @@ set -e
 if [ "$TRAVIS" == 'true' ]; then
   # Build Elm and PureScript with 1 CPU to fix performance issues
   sysconfcpus -n 1 npm run compile -- --env.only elm,purescript
-  CLEAN_DIST=false npm run compile -- --env.exclude elm,purescript,rust
+  CLEAN_DIST=false npm run compile -- --env.exclude elm,purescript,rust-asmjs,rust-wasm
 else
   npm run compile
 fi
