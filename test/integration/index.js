@@ -1,6 +1,6 @@
 var system = require('system');
 
-var langOverrides = { dart: 'google' };
+var langOverrides = { dart: 'google', rust: 'rust-asmjs' };
 var lang = system.env.SQL_FORMATTER_LANG.toLowerCase().trim();
 lang = langOverrides[lang] || lang;
 

@@ -145,6 +145,7 @@ First, make sure you have cmake installed, then run:
 curl -L https://sh.rustup.rs | sh -s -- -y --default-toolchain=nightly
 source ~/.cargo/env
 rustup target add asmjs-unknown-emscripten
+rustup target add wasm32-unknown-emscripten
 
 # Install the Emscripten SDK
 mkdir -p "$HOME/.emsdk"
@@ -155,6 +156,8 @@ emsdk update
 emsdk install sdk-incoming-64bit
 emsdk activate sdk-incoming-64bit
 ```
+
+*Note: Running Rust with WebAssembly will only work with browsers that support WebAssembly*
 
 ### Scala.js
 
