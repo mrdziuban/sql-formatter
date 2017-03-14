@@ -112,7 +112,7 @@ module.exports = (env) => {
                     `&warn=true&yes=true${process.env.TRAVIS === 'true' ? '&maxInstances=1' : ''}`
         },
         { test: /\.exjs$/, loader: 'babel-loader!elixirscript-loader' },
-        { test: /\.fsx$/, loader: 'babel-loader!fable-loader' },
+        { test: /\.fsx$/, loader: 'babel-loader!fable-compiler-loader' },
         { test: /\.go$/, loader: 'gopherjs-loader' },
         { test: /\.php$/, loader: 'raw-loader' },
         {
@@ -128,7 +128,7 @@ module.exports = (env) => {
             ]
           }
         },
-        { test: /\.rb$/, loader: 'opal-loader' },
+        { test: /\.rb$/, loader: 'opal-rb-loader?includeOpal=false' },
         { test: /\.rs$/, loader: 'rust-emscripten-loader', query: { release: prod } },
         { test: /\.scala$/, loader: 'scalajs-loader' },
         {
