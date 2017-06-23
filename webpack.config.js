@@ -141,6 +141,7 @@ module.exports = (env) => {
       ]
     },
     plugins: [
+      new webpack.optimize.ModuleConcatenationPlugin(),
       new CopyWebpackPlugin([{ from: path.join(__dirname, 'img'), to: path.join(__dirname, 'dist', 'img') }]),
       new ExtractTextPlugin(path.join('css', 'bundle.css')),
       new HtmlWebpackPlugin({
