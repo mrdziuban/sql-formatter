@@ -1,6 +1,6 @@
 module Test.SQLFormatter where
 
-import Prelude (($), (<>), bind, Unit)
+import Prelude (($), (<>), discard, Unit)
 import Control.Monad.Free (Free)
 import Data.Array (replicate)
 import Data.String (fromCharArray, trim)

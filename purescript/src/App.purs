@@ -1,10 +1,9 @@
 module App (main) where
 
-import Prelude ((>>>), (>>=), (<>), bind, pure, unit, Unit)
+import Prelude ((>>>), (>>=), (<>), bind, discard, pure, unit, Unit)
 import Control.Monad.Eff (Eff)
 import Data.Int (fromString)
 import Data.Maybe (fromMaybe, Maybe, maybe)
-import Data.Nullable (toMaybe)
 import DOM (DOM)
 import DOM.Event.EventTarget (addEventListener, eventListener)
 import DOM.Event.Types (Event)
@@ -12,7 +11,7 @@ import DOM.HTML.Event.EventTypes (click, focus, input)
 import DOM.HTML (window)
 import DOM.HTML.Types (htmlDocumentToParentNode)
 import DOM.HTML.Window (document)
-import DOM.Node.ParentNode (querySelector)
+import DOM.Node.ParentNode (QuerySelector(..), querySelector)
 import DOM.Node.Types (Element, elementToEventTarget)
 
 import SQLFormatter (formatSql)
@@ -47,7 +46,7 @@ view =
 getElementById :: forall a. String -> Eff (dom :: DOM | a) (Maybe Element)
 getElementById id_ = do
   doc <- window >>= document >>= htmlDocumentToParentNode >>> pure
-  querySelector ("#" <> id_) doc >>= toMaybe >>> pure
+  querySelector (QuerySelector ("#" <> id_)) doc
 
 render :: forall a. Eff (dom :: DOM | a) Unit
 render =
