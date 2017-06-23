@@ -99,4 +99,4 @@ script:
 env:
   global:
     - EXS_VERSION=56cb2c5
-    - SBT_VERSION=0.13.13
+    - SBT_VERSION=0.13.15
