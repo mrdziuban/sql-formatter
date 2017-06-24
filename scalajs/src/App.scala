@@ -38,7 +38,7 @@ object App extends JSApp {
        document.getElementById("sql-spaces").asInstanceOf[Input])
 
   private def getSpaces(spaces: Input): Int =
-    try { spaces.value.toInt } catch { case e: Exception => defaultSpaces }
+    try { spaces.value.toInt } catch { case _: Exception => defaultSpaces }
 
   private def updateOutput(input: TextArea, output: TextArea, spaces: Input)(e: Event): Unit =
     output.value = SQLFormatter.format(input.value, getSpaces(spaces))
