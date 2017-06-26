@@ -166,7 +166,7 @@ emsdk activate sdk-incoming-64bit
 Run the following to setup SBT:
 
 ```bash
-export SBT_VERSION=0.13.13
+export SBT_VERSION=0.13.15
 mkdir -p "$HOME/.sbt-bin/$SBT_VERSION"
 curl -o- -L https://dl.bintray.com/sbt/native-packages/sbt/$SBT_VERSION/sbt-$SBT_VERSION.tgz | tar xvzf - -C "$HOME/.sbt-bin/$SBT_VERSION" --strip-components 1
 export PATH="$HOME/.sbt-bin/$SBT_VERSION/bin:$PATH"
