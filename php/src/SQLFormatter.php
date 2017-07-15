@@ -1,11 +1,11 @@
 <?php
 
 class SQLFormatter {
-  private static $sep = '~::~';
+  public $sep = '~::~';
 
   public function format($sql, $numSpaces) {
     $tab = str_repeat(' ', $numSpaces);
-    $splitByQuotes = explode(self::$sep, preg_replace('/\s+/', ' ', preg_replace("/'/", self::$sep . "'", $sql)));
+    $splitByQuotes = explode($this->sep, preg_replace('/\s+/', ' ', preg_replace("/'/", $this->sep . "'", $sql)));
     $input = array(
       'str' => '',
       'shiftArr' => $this->createShiftArr($tab),
@@ -28,7 +28,7 @@ class SQLFormatter {
       $acc['deep'] = $out[1];
     }
 
-    return trim(preg_replace('/\s+\n/', "\n", preg_replace('/\n+/', "\n", $acc['str'])));
+    return trim(preg_replace('/\s+\\n/', "\n", preg_replace('/\\n+/', "\n", $acc['str'])));
   }
 
   private function updateOutput($el, $parensLevel, $acc) {
@@ -65,60 +65,65 @@ class SQLFormatter {
   }
 
   private function allReplacements($tab) {
+    $sep = $this->sep;
     return array(
-      '/ AND /i'                              => self::$sep . $tab . 'AND ',
-      '/ BETWEEN /i'                          => self::$sep . $tab . 'BETWEEN ',
-      '/ CASE /i'                             => self::$sep . $tab . 'CASE ',
-      '/ ELSE /i'                             => self::$sep . $tab . 'ELSE ',
-      '/ END /i'                              => self::$sep . $tab . 'END ',
-      '/ FROM /i'                             => self::$sep . 'FROM ',
-      '/ GROUP\s+BY /i'                       => self::$sep . 'GROUP BY ',
-      '/ HAVING /i'                           => self::$sep . 'HAVING ',
-      '/ IN /i'                               => ' IN ',
-      '/ JOIN /i'                             => self::$sep . 'JOIN ',
-      '/ CROSS(~::~)+JOIN /i'                 => self::$sep . 'CROSS JOIN ',
-      '/ INNER(~::~)+JOIN /i'                 => self::$sep . 'INNER JOIN ',
-      '/ LEFT(~::~)+JOIN /i'                  => self::$sep . 'LEFT JOIN ',
-      '/ RIGHT(~::~)+JOIN /i'                 => self::$sep . 'RIGHT JOIN ',
-      '/ ON /i'                               => self::$sep . $tab . 'ON ',
-      '/ OR /i'                               => self::$sep . $tab . 'OR ',
-      '/ ORDER\s+BY /i'                       => self::$sep . 'ORDER BY ',
-      '/ OVER /i'                             => self::$sep . $tab . 'OVER ',
-      '/\(\s*SELECT /i'                       => self::$sep . '(SELECT ',
-      '/\)\s*SELECT /i'                       => ')' . self::$sep . 'SELECT ',
-      '/ THEN /i'                             => ' THEN' . self::$sep . $tab,
-      '/ UNION /i'                            => self::$sep . 'UNION' . self::$sep,
-      '/ USING /i'                            => self::$sep . 'USING ',
-      '/ WHEN /i'                             => self::$sep . $tab . 'WHEN ',
-      '/ WHERE /i'                            => self::$sep . 'WHERE ',
-      '/ WITH /i'                             => self::$sep . 'WITH ',
-      '/ SET /i'                              => self::$sep . 'SET ',
-      '/ ALL /i'                              => ' ALL ',
-      '/ AS /i'                               => ' AS ',
-      '/ ASC /i'                              => ' ASC ',
-      '/ DESC /i'                             => ' DESC ',
-      '/ DISTINCT /i'                         => ' DISTINCT ',
-      '/ EXISTS /i'                           => ' EXISTS ',
-      '/ NOT /i'                              => ' NOT ',
-      '/ NULL /i'                             => ' NULL ',
-      '/ LIKE /i'                             => ' LIKE ',
-      '/\s*SELECT /i'                         => 'SELECT ',
-      '/\s*UPDATE /i'                         => 'UPDATE ',
-      '/\s*DELETE /i'                         => 'DELETE ',
-      '/(' . self::$sep . ')+/'               => self::$sep
+      function($str) use($tab, $sep) { return preg_replace('/ AND /i',              $sep . $tab . 'AND ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ BETWEEN /i',          $sep . $tab . 'BETWEEN ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ CASE /i',             $sep . $tab . 'CASE ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ ELSE /i',             $sep . $tab . 'ELSE ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ END /i',              $sep . $tab . 'END ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ FROM /i',             $sep . 'FROM ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ GROUP\s+BY /i',       $sep . 'GROUP BY ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ HAVING /i',           $sep . 'HAVING ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ IN /i',               ' IN ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ JOIN /i',             $sep . 'JOIN ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ CROSS(~::~)+JOIN /i', $sep . 'CROSS JOIN ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ INNER(~::~)+JOIN /i', $sep . 'INNER JOIN ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ LEFT(~::~)+JOIN /i',  $sep . 'LEFT JOIN ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ RIGHT(~::~)+JOIN /i', $sep . 'RIGHT JOIN ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ ON /i',               $sep . $tab . 'ON ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ OR /i',               $sep . $tab . 'OR ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ ORDER\s+BY /i',       $sep . 'ORDER BY ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ OVER /i',             $sep . $tab . 'OVER ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/\(\s*SELECT /i',       $sep . '(SELECT ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/\)\s*SELECT /i',       ')' . $sep . 'SELECT ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ THEN /i',             ' THEN' . $sep . $tab, $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ UNION /i',            $sep . 'UNION' . $sep, $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ USING /i',            $sep . 'USING ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ WHEN /i',             $sep . $tab . 'WHEN ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ WHERE /i',            $sep . 'WHERE ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ WITH /i',             $sep . 'WITH ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ SET /i',              $sep . 'SET ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ ALL /i',              ' ALL ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ AS /i',               ' AS ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ ASC /i',              ' ASC ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ DESC /i',             ' DESC ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ DISTINCT /i',         ' DISTINCT ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ EXISTS /i',           ' EXISTS ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ NOT /i',              ' NOT ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ NULL /i',             ' NULL ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/ LIKE /i',             ' LIKE ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/\s*SELECT /i',         'SELECT ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/\s*UPDATE /i',         'UPDATE ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/\s*DELETE /i',         'DELETE ', $str); },
+      function($str) use($tab, $sep) { return preg_replace('/(~::~)+/', $sep, $str); }
     );
   }
 
   private function splitSql($str, $tab) {
     $str = preg_replace('/\s+/', ' ', $str);
-    $regexes = $this->allReplacements($tab);
-    foreach($regexes as $regex => $replacement) {
-      $str = preg_replace($regex, $replacement, $str);
+    $replacements = $this->allReplacements($tab);
+    foreach($replacements as $replacementFn) {
+      $str = $replacementFn($str);
     }
-    return explode(self::$sep, $str);
+    return explode($this->sep, $str);
   }
 
   private function splitIfEven($i, $str, $tab) {
-    return $i % 2 === 0 ? $this->splitSql($str, $tab) : array($str);
+    return ($i % 2) === 0 ? $this->splitSql($str, $tab) : array($str);
   }
+}
+
+if ($_ENV['EXPORTS'] !== 'false') {
+  $module->exports = new SQLFormatter;
 }

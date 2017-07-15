@@ -114,7 +114,16 @@ module.exports = (env) => {
         { test: /\.exjs$/, loader: 'babel-loader!elixirscript-loader' },
         { test: /\.fsx$/, loader: 'babel-loader!fable-compiler-loader' },
         { test: /\.go$/, loader: 'gopherjs-loader' },
-        { test: /\.php$/, loader: 'raw-loader' },
+        {
+          test: /\.php$/,
+          use: [
+            'babel-loader',
+            {
+              loader: 'babel-loader',
+              options: { babelrc: false, presets: ['php'], plugins: [] }
+            }
+          ]
+        },
         {
           test: /\.purs$/,
           loader: 'purs-loader',
