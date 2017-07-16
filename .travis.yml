@@ -65,7 +65,7 @@ before_install:
   - curl -o- -sL https://storage.googleapis.com/golang/go1.8.linux-amd64.tar.gz | tar xzf - -C "$HOME/.go"
   - export GOROOT="$HOME/.go/go"
   - export PATH="$GOROOT/bin:$HOME/go/bin:$PATH"
-  # PHP.js
+  # PHP
   - mkdir -p "$HOME/.phpunit/bin"
   - curl -sL https://phar.phpunit.de/phpunit-4.8.phar -o "$HOME/.phpunit/bin/phpunit"
   - chmod +x "$HOME/.phpunit/bin/phpunit"
