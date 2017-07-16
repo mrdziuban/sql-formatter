@@ -38,8 +38,8 @@ const _languages = {
     link: 'http://opalrb.org/'
   },
   php: {
-    name: 'PHP.js',
-    link: 'http://phpjs.hertzen.com/'
+    name: 'PHP',
+    link: 'https://gitlab.com/kornelski/babel-preset-php'
   },
   purescript: {
     name: 'PureScript',

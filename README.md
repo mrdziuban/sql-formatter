@@ -14,7 +14,7 @@
   - [Fable](#fable)
   - [GopherJS](#gopherjs)
   - [Opal](#opal)
-  - [PHP.js](#phpjs)
+  - [PHP](#php)
   - [PureScript](#purescript)
   - [Rust](#rust)
   - [Scala.js](#scalajs)
@@ -45,7 +45,7 @@ The current languages are:
 - [Fable](#fable)
 - [GopherJS](#gopherjs)
 - [Opal](#opal)
-- [PHP.js](#phpjs)
+- [PHP](#php)
 - [PureScript](#purescript)
 - [Rust](#rust)
 - [Scala.js](#scalajs)
@@ -117,7 +117,7 @@ First, install Ruby if you don't already have it. I recommend using [RVM](https:
 bundle install
 ```
 
-### PHP.js
+### PHP
 
 Install PHP (any version 5.3-5.6 should work fine), then install PHPUnit:
 
