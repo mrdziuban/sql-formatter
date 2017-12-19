@@ -139,27 +139,15 @@ $(npm bin)/bower install
 ### Rust
 
 Rust has the most experimental compilation process, using
-[support for Emscripten via nightly builds](https://users.rust-lang.org/t/compiling-to-the-web-with-rust-and-emscripten/7627).
-First, make sure you have cmake installed, then run:
+[support for WebAssembly via nightly builds](https://www.hellorust.com/news/native-wasm-target.html). Run the following:
 
 ```bash
 # Install Rust
 curl -L https://sh.rustup.rs | sh -s -- -y --default-toolchain=nightly
 source ~/.cargo/env
-rustup target add asmjs-unknown-emscripten
-rustup target add wasm32-unknown-emscripten
-
-# Install the Emscripten SDK
-mkdir -p "$HOME/.emsdk"
-curl -o- -L https://s3.amazonaws.com/mozilla-games/emscripten/releases/emsdk-portable.tar.gz | tar xvzf - -C "$HOME/.emsdk"
-source "$HOME/.emsdk/emsdk_portable/emsdk_env.sh"
-emsdk update
-# This step will take a bit
-emsdk install sdk-incoming-64bit
-emsdk activate sdk-incoming-64bit
+rustup target add wasm32-unknown-unknown
+cargo install cargo-web
 ```
-
-*Note: Running Rust with WebAssembly will only work with browsers that support WebAssembly*
 
 ### Scala.js
 

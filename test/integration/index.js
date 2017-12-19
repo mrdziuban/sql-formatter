@@ -1,65 +1,54 @@
-var system = require('system');
+import assert from 'assert';
+import puppeteer from 'puppeteer';
 
-var langOverrides = { dart: 'google', rust: 'rust-asmjs' };
-var lang = system.env.SQL_FORMATTER_LANG.toLowerCase().trim();
+const langOverrides = { dart: 'google' };
+let lang = process.env.SQL_FORMATTER_LANG.toLowerCase().trim();
 lang = langOverrides[lang] || lang;
 
-var input = "select * from users as u join roles as r on u.id = r.user_id where u.email like '%gmail.com' and u.first_name = 'John';";
-var output = function(numSpaces) {
-  var tab = Array(numSpaces + 1).join(' ');
-  return 'SELECT *\nFROM users AS u\nJOIN roles AS r\n' + tab + 'ON u.id = r.user_id\n' +
-         "WHERE u.email LIKE '%gmail.com'\n" + tab + "AND u.first_name = 'John';";
-};
+const input = "select * from users as u join roles as r on u.id = r.user_id where u.email like '%gmail.com' and u.first_name = 'John';";
+const expectedOutput = numSpaces =>
+  `SELECT *\nFROM users AS u\nJOIN roles AS r\n${' '.repeat(numSpaces)}ON u.id = r.user_id\n` +
+  `WHERE u.email LIKE '%gmail.com'\n${' '.repeat(numSpaces)}AND u.first_name = 'John';`;
 
-casper.test.begin('SQL formatting using ' + lang, 2, function(test) {
-  casper.on('page.error', function(msg, trace) {
-    casper.echo('Error: ' + msg, 'ERROR');
-    casper.echo(trace.map(function(t) {
-      return '' + t.file + ':' + t.line + ' in ' + t.function;
-    }).join('\n'), 'ERROR');
+describe(`SQL formatting using ${lang}`, () => {
+  let browser;
+  let page;
+
+  const setInput = async (val, id) => await page.$eval(id || '#sql-input', (el, v) => {
+    el.value = v;
+    el.dispatchEvent(new Event('input'));
+  }, val);
+
+  const waitForOutput = async empty => {
+    await page.waitForFunction(`document.getElementById('sql-output').value ${empty ? '===' : '!=='} ''`);
+    return await page.$eval('#sql-output', el => el.value);
+  }
+
+  before(async function () {
+    this.timeout(10000);
+    browser = await puppeteer.launch();
+    page = await browser.newPage();
+    await page.goto(`http://localhost:8000/?lang=${lang}`);
+    await page.waitForSelector('#sql-input');
   });
 
-  var setInput = function(val, id) {
-    id = id || 'sql-input';
-    casper.evaluate(function(id, val) {
-      document.getElementById(id).value = val;
-      document.getElementById(id).dispatchEvent(new Event('input'));
-    }, id, val);
-  };
-
-  var waitForOutput = function(empty, callback) {
-    return casper.waitFor(function() {
-      return casper.evaluate(function(empty) {
-        return empty
-          ? document.getElementById('sql-output').value === ''
-          : document.getElementById('sql-output').value !== '';
-      }, empty);
-    }, callback);
-  };
-
-  var testOutput = function(msg, expected) {
-    test.assertEvalEquals(function() {
-      return document.getElementById('sql-output').value;
-    }, expected, msg);
-  };
-
-  // Test basic SQL formatting
-  casper.start('http://localhost:8000/?lang=' + lang, function() {
-    casper.waitForSelector('#sql-input', function() {
-      setInput(input);
-      waitForOutput(false, function() { testOutput('SQL is formatted correctly', output(2)); });
-    });
+  beforeEach(async () => {
+    await setInput('');
+    await waitForOutput(true);
   });
 
-  // Test formatting with 4 spaces
-  casper.then(function() {
-    setInput('');
-    waitForOutput(true, function() {
-      setInput(4, 'sql-spaces');
-      setInput(input);
-      waitForOutput(false, function() { testOutput('SQL is formatted correctly with 4 spaces', output(4)); });
-    });
-  })
+  after(async () => browser && browser.close());
 
-  casper.run(function() { test.done(); });
+  it('formats SQL correctly with 2 spaces', async () => {
+    await setInput(input);
+    const output = await waitForOutput(false);
+    assert.equal(expectedOutput(2), output);
+  });
+
+  it('formats SQL correctly with 4 spaces', async () => {
+    await setInput(4, '#sql-spaces');
+    await setInput(input);
+    const output = await waitForOutput(false);
+    assert.equal(expectedOutput(4), output);
+  });
 });

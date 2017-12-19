@@ -5,6 +5,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const WebpackSynchronizableShellPlugin = require('webpack-synchronizable-shell-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 
 const _languages = {
@@ -45,17 +46,9 @@ const _languages = {
     name: 'PureScript',
     link: 'http://www.purescript.org/'
   },
-  'rust-asmjs': {
-    name: 'Rust (asm.js)',
-    link: 'https://users.rust-lang.org/t/compiling-to-the-web-with-rust-and-emscripten/7627',
-    in: 'rust',
-    index: 'index-asmjs.js'
-  },
-  'rust-wasm': {
-    name: 'Rust (WebAssembly)',
-    link: 'https://users.rust-lang.org/t/compiling-to-the-web-with-rust-and-emscripten/7627',
-    in: 'rust',
-    index: 'index-wasm.js'
+  rust: {
+    name: 'Rust',
+    link: 'https://www.hellorust.com/news/native-wasm-target.html'
   },
   scalajs: {
     name: 'Scala.js',
@@ -138,7 +131,6 @@ module.exports = (env) => {
           }
         },
         { test: /\.rb$/, loader: 'opal-rb-loader?includeOpal=false' },
-        { test: /\.rs$/, loader: 'rust-emscripten-loader', query: { release: prod } },
         { test: /\.scala$/, loader: 'scalajs-loader' },
         {
           test: /\.scss$/,
@@ -151,7 +143,13 @@ module.exports = (env) => {
     },
     plugins: [
       new webpack.optimize.ModuleConcatenationPlugin(),
-      new CopyWebpackPlugin([{ from: path.join(__dirname, 'img'), to: path.join(__dirname, 'dist', 'img') }]),
+      new CopyWebpackPlugin([{ from: path.join(__dirname, 'img'), to: path.join(__dirname, 'dist', 'img') }]
+        .concat(Object.keys(languages).includes('rust')
+          ? [{
+            from: path.join(__dirname, 'rust', 'target', 'wasm32-unknown-unknown', 'release', 'sql-formatter.wasm'),
+            to: path.join(__dirname, 'dist', 'sql-formatter.wasm')
+          }]
+          : [])),
       new ExtractTextPlugin(path.join('css', 'bundle.css')),
       new HtmlWebpackPlugin({
         languages: languages,
@@ -159,8 +157,10 @@ module.exports = (env) => {
         filename: path.join(__dirname, 'dist', 'index.html'),
         template: path.join(__dirname, 'index.ejs')
       })
-    ],
-    resolve: { extensions: ['.js', '.dart', '.ejs', '.elm', '.exjs', '.fsx', '.go', '.php', '.purs', '.rb', '.rs', '.scala', '.scss'] }
+    ].concat(Object.keys(languages).includes('rust')
+      ? [new WebpackSynchronizableShellPlugin({ onBuildStart: { scripts: [`cd ${path.join(__dirname, 'rust')} && cargo-web build --target-webasm`], blocking: true }, safe: true })]
+      : []),
+    resolve: { extensions: ['.js', '.dart', '.ejs', '.elm', '.exjs', '.fsx', '.go', '.php', '.purs', '.rb', '.scala', '.scss'] }
   };
 
   return Object.defineProperty(merge(base,

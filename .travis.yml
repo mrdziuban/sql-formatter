@@ -16,7 +16,6 @@ cache:
     - $HOME/.ivy2/cache
     - $HOME/.sbt/boot
     - $HOME/.pub-cache
-    - $HOME/.phantomjs
     - $HOME/.sysconfcpus
     - $HOME/.cargo
 branches:
@@ -62,7 +61,7 @@ before_install:
   - export PATH="$HOME/.elixirscript/$EXS_VERSION/dist/elixirscript/bin:$PATH"
   # GopherJS
   - mkdir -p "$HOME/.go"
-  - curl -o- -sL https://storage.googleapis.com/golang/go1.8.linux-amd64.tar.gz | tar xzf - -C "$HOME/.go"
+  - curl -o- -sL https://storage.googleapis.com/golang/go1.9.linux-amd64.tar.gz | tar xzf - -C "$HOME/.go"
   - export GOROOT="$HOME/.go/go"
   - export PATH="$GOROOT/bin:$HOME/go/bin:$PATH"
   # PHP
@@ -75,15 +74,13 @@ before_install:
   - curl -o- -sL https://dl.bintray.com/sbt/native-packages/sbt/$SBT_VERSION/sbt-$SBT_VERSION.tgz | tar xzf - -C "$HOME/.sbt-bin/$SBT_VERSION" --strip-components 1
   - export JAVA_HOME=/usr/lib/jvm/java-8-oracle
   - export PATH="$HOME/.sbt-bin/$SBT_VERSION/bin:$JAVA_HOME/bin:$PATH"
-  # PhantomJS
-  - mkdir -p "$HOME/.phantomjs"
-  - if [ ! -f "$HOME/.phantomjs/bin/phantomjs" ]; then curl -o- -sL https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2 | tar xjf - -C "$HOME/.phantomjs" --strip-components 1; fi
-  - export PATH="$HOME/.phantomjs/bin:$PATH"
   # Rust
-  - if [ ! -f "$HOME/.cargo/env" ]; then curl https://sh.rustup.rs -sSf | sh -s -- -y; fi
+  - if [ ! -f "$HOME/.cargo/env" ]; then curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain nightly; fi
   - source "$HOME/.cargo/env"
-  - rustup toolchain install stable
-  - rustup default stable
+  - rustup toolchain install nightly
+  - rustup default nightly
+  - rustup target add wasm32-unknown-unknown --toolchain nightly
+  - if [ ! -f "$HOME/.cargo/bin/cargo-web" ]; then cargo install cargo-web; fi
 install:
   - npm install
   # Dart
