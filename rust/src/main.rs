@@ -1,4 +1,4 @@
-extern crate regex;
+#[cfg(test)] extern crate regex;
 #[macro_use] extern crate stdweb;
 
 mod regex_fns;
@@ -47,8 +47,6 @@ fn main() {
 
     output.add_event_listener(enclose! { (output) move |_: ClickEvent| { js! { @(no_return) @{&output}.select(); } } });
     output.add_event_listener(enclose! { (output) move |_: FocusEvent| { js! { @(no_return) @{&output}.select(); } } });
-
-    stdweb::event_loop();
 }
 
 fn update_output(input: &Element, output: &Element, spaces: &Element) {
