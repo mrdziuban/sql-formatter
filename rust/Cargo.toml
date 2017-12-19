@@ -4,6 +4,5 @@ name = "sql-formatter"
 version = "0.1.0"
 
 [dependencies]
-libc = "~0.2"
 regex = "~0.2"
-webplatform = { git = "https://github.com/mrdziuban/rust-webplatform.git" }
+stdweb = "~0.1"
