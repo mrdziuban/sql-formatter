@@ -16,7 +16,7 @@ function runTests {
 
 function runIntegrationTests {
   printf "\n\033[0;33mRunning integration tests for $1\033[0m\n\n"
-  SQL_FORMATTER_LANG="$1" $npm_bin/casperjs test "$root_dir/test/integration/index.js"
+  SQL_FORMATTER_LANG="$1" $npm_bin/mocha --compilers js:babel-core/register "$root_dir/test/integration/index.js"
   RESULT+=$?
 }
 
@@ -64,7 +64,7 @@ runIntegrationTests 'GopherJS'
 runIntegrationTests 'Opal'
 runIntegrationTests 'PHP'
 runIntegrationTests 'PureScript'
-if [ "$TRAVIS" != 'true' ]; then runIntegrationTests 'Rust'; fi
+runIntegrationTests 'Rust'
 runIntegrationTests 'ScalaJS'
 
 kill $server_pid
