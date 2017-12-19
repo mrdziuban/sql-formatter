@@ -10,14 +10,18 @@ npm_bin=$(npm bin)
 function runTests {
   echo -e "\n\033[0;33mRunning $1 tests\n\n\t${@:2}\033[0m\n\n"
   time "${@:2}"
-  RESULT+=$?
+  res=$?
+  RESULT+=$res
+  if [ "$res" != '0' ]; then echo -e "\n\n\033[0;31m***** $1 tests FAILED *****\033[0m\n\n"; fi
   cd $root_dir
 }
 
 function runIntegrationTests {
-  printf "\n\033[0;33mRunning integration tests for $1\033[0m\n\n"
+  printf "\n\033[0;33mRunning integration tests for $1\033[0m\n"
   SQL_FORMATTER_LANG="$1" $npm_bin/mocha --compilers js:babel-core/register "$root_dir/test/integration/index.js"
-  RESULT+=$?
+  res=$?
+  RESULT+=$res
+  if [ "$res" != '0' ]; then echo -e "\n\n\033[0;31m***** $1 integration tests FAILED *****\033[0m\n\n"; fi
 }
 
 function retry {

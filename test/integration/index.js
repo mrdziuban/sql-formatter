@@ -24,7 +24,8 @@ describe(`SQL formatting using ${lang}`, () => {
     return await page.$eval('#sql-output', el => el.value);
   }
 
-  before(async () => {
+  before(async function () {
+    this.timeout(10000);
     browser = await puppeteer.launch();
     page = await browser.newPage();
     await page.goto(`http://localhost:8000/?lang=${lang}`);
@@ -36,7 +37,7 @@ describe(`SQL formatting using ${lang}`, () => {
     await waitForOutput(true);
   });
 
-  after(async () => browser.close());
+  after(async () => browser && browser.close());
 
   it('formats SQL correctly with 2 spaces', async () => {
     await setInput(input);
