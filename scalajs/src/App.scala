@@ -3,12 +3,11 @@ package mrdziuban.sqlFormatter
 import org.scalajs.dom.document
 import org.scalajs.dom.html.{Input, TextArea}
 import org.scalajs.dom.raw.{Event, FocusEvent}
-import scala.scalajs.js.JSApp
 
-object App extends JSApp {
+object App {
   val defaultSpaces = 2
 
-  def main(): Unit = {
+  def main(args: Array[String]): Unit = {
     render
     withEls(bindEvents)
     ()
@@ -40,13 +39,14 @@ object App extends JSApp {
   private def getSpaces(spaces: Input): Int =
     try { spaces.value.toInt } catch { case _: Exception => defaultSpaces }
 
-  private def updateOutput(input: TextArea, output: TextArea, spaces: Input)(e: Event): Unit =
-    output.value = SQLFormatter.format(input.value, getSpaces(spaces))
+  private def updateOutput(input: TextArea, output: TextArea, spaces: Input): Event => Unit =
+    (_: Event) => output.value = SQLFormatter.format(input.value, getSpaces(spaces))
 
-  private def selectOutput(output: TextArea)(e: Event): Unit = {
-    output.dispatchEvent(new FocusEvent)
-    document.getSelection.selectAllChildren(output)
-  }
+  private def selectOutput(output: TextArea): Event => Unit =
+    (_: Event) => {
+      output.dispatchEvent(new FocusEvent)
+      document.getSelection.selectAllChildren(output)
+    }
 
   private def bindEvents(input: TextArea, output: TextArea, spaces: Input): Unit = {
     input.addEventListener("input", updateOutput(input, output, spaces))

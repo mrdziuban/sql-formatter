@@ -71,7 +71,7 @@ before_install:
   - export PATH="$HOME/.phpunit/bin:$PATH"
   # Scala.js
   - mkdir -p "$HOME/.sbt-bin/$SBT_VERSION"
-  - curl -o- -sL https://dl.bintray.com/sbt/native-packages/sbt/$SBT_VERSION/sbt-$SBT_VERSION.tgz | tar xzf - -C "$HOME/.sbt-bin/$SBT_VERSION" --strip-components 1
+  - curl -o- -sL https://github.com/sbt/sbt/releases/download/v$SBT_VERSION/sbt-$SBT_VERSION.tgz | tar xzf - -C "$HOME/.sbt-bin/$SBT_VERSION" --strip-components 1
   - export JAVA_HOME=/usr/lib/jvm/java-8-oracle
   - export PATH="$HOME/.sbt-bin/$SBT_VERSION/bin:$JAVA_HOME/bin:$PATH"
   # Rust
@@ -96,4 +96,4 @@ script:
 env:
   global:
     - EXS_VERSION=56cb2c5
-    - SBT_VERSION=0.13.15
+    - SBT_VERSION=1.0.4
