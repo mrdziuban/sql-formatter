@@ -77,6 +77,8 @@ before_install:
   # Rust
   - if [ ! -f "$HOME/.cargo/env" ]; then curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain nightly; fi
   - source "$HOME/.cargo/env"
+  - rustup toolchain install nightly
+  - rustup default nightly
   - rustup target add wasm32-unknown-unknown --toolchain nightly
   - if [ ! -f "$HOME/.cargo/bin/cargo-web" ]; then cargo install cargo-web; fi
 install:
