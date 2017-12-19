@@ -77,13 +77,13 @@ name = "sql-formatter"
 version = "0.1.0"
 dependencies = [
  "regex 0.2.3 (registry+https://github.com/rust-lang/crates.io-index)",
- "stdweb 0.2.0 (git+https://github.com/mrdziuban/stdweb.git?branch=input-event)",
+ "stdweb 0.2.0 (git+https://github.com/koute/stdweb.git?rev=9ba27f1c3)",
 ]
 
 [[package]]
 name = "stdweb"
 version = "0.2.0"
-source = "git+https://github.com/mrdziuban/stdweb.git?branch=input-event#77393e4d91dcaf283b57b11c8c8b080c16ef59ea"
+source = "git+https://github.com/koute/stdweb.git?rev=9ba27f1c3#9ba27f1c317db65049f675834485d3d12405e1f3"
 dependencies = [
  "serde 1.0.24 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_json 1.0.8 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -128,7 +128,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum regex-syntax 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)" = "ad890a5eef7953f55427c50575c680c42841653abd2b028b68cd223d157f62db"
 "checksum serde 1.0.24 (registry+https://github.com/rust-lang/crates.io-index)" = "1c57ab4ec5fa85d08aaf8ed9245899d9bbdd66768945b21113b84d5f595cb6a1"
 "checksum serde_json 1.0.8 (registry+https://github.com/rust-lang/crates.io-index)" = "7cf5b0b5b4bd22eeecb7e01ac2e1225c7ef5e4272b79ee28a8392a8c8489c839"
-"checksum stdweb 0.2.0 (git+https://github.com/mrdziuban/stdweb.git?branch=input-event)" = "<none>"
+"checksum stdweb 0.2.0 (git+https://github.com/koute/stdweb.git?rev=9ba27f1c3)" = "<none>"
 "checksum thread_local 0.3.5 (registry+https://github.com/rust-lang/crates.io-index)" = "279ef31c19ededf577bfd12dfae728040a21f635b06a24cd670ff510edd38963"
 "checksum unreachable 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)" = "382810877fe448991dfc7f0dd6e3ae5d58088fd0ea5e35189655f84e6814fa56"
 "checksum utf8-ranges 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)" = "662fab6525a98beff2921d7f61a39e7d59e0b425ebc7d0d9e66d316e55124122"

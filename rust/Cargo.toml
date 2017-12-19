@@ -5,4 +5,4 @@ version = "0.1.0"
 
 [dependencies]
 regex = "~0.2"
-stdweb = { git = "https://github.com/mrdziuban/stdweb.git", branch = "input-event" }
+stdweb = { git = "https://github.com/koute/stdweb.git", rev = "9ba27f1c3" }
