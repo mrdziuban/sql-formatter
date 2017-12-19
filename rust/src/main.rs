@@ -4,9 +4,8 @@ extern crate regex;
 mod regex_fns;
 mod sql_formatter;
 
-use stdweb::unstable::TryInto;
 use stdweb::web::{document, Element, IEventTarget};
-use stdweb::web::event::{ChangeEvent, ClickEvent, FocusEvent};
+use stdweb::web::event::{ClickEvent, FocusEvent, InputEvent};
 
 macro_rules! enclose {
     ( ($( $x:ident ),*) $y:expr ) => {
@@ -43,8 +42,8 @@ fn main() {
     let output = document().query_selector("#sql-output").unwrap();
     let spaces = document().query_selector("#sql-spaces").unwrap();
 
-    input.add_event_listener(enclose! { (input, output, spaces) move |_: ChangeEvent| { update_output(&input, &output, &spaces) } });
-    spaces.add_event_listener(enclose! { (input, output, spaces) move |_: ChangeEvent| { update_output(&input, &output, &spaces) } });
+    input.add_event_listener(enclose! { (input, output, spaces) move |_: InputEvent| { update_output(&input, &output, &spaces) } });
+    spaces.add_event_listener(enclose! { (input, output, spaces) move |_: InputEvent| { update_output(&input, &output, &spaces) } });
 
     output.add_event_listener(enclose! { (output) move |_: ClickEvent| { js! { @(no_return) @{&output}.select(); } } });
     output.add_event_listener(enclose! { (output) move |_: FocusEvent| { js! { @(no_return) @{&output}.select(); } } });
@@ -54,7 +53,7 @@ fn main() {
 
 fn update_output(input: &Element, output: &Element, spaces: &Element) {
     let input_val: String = js! { return @{input}.value; }.into_string().unwrap();
-    let spaces_val: i32 = js! { return @{spaces}.value; }.try_into().unwrap();
-    let formatted = &sql_formatter::format(input_val, spaces_val);
+    let spaces_val: String = js! { return @{spaces}.value; }.into_string().unwrap();
+    let formatted = &sql_formatter::format(input_val, spaces_val.parse::<i32>().unwrap());
     js! { @(no_return) @{output}.value = @{formatted}; }
 }

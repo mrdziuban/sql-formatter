@@ -34,7 +34,8 @@
     <script>
       var langs = <%= JSON.stringify(htmlWebpackPlugin.options.languages) %>;
       var urlMatch = window.location.search.match(/lang=([^&]+)/);
-      var langsToPick = Object.keys(langs).filter(function(l) { return l !== 'rust-wasm'; });
+      var langKeys = Object.keys(langs);
+      var langsToPick = (langKeys.length === 1 && langKeys[0] === 'rust') ? langKeys : langKeys.filter(function(l) { return l !== 'rust'; });
       var lang = urlMatch && urlMatch[1] && langs[urlMatch[1].toLowerCase()]
         ? urlMatch[1].toLowerCase()
         : langsToPick[Math.floor(Math.random() * langsToPick.length)];

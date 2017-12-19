@@ -48,13 +48,13 @@
     "purescript-psa": "^0.5.1",
     "purs-loader": "^3.0.0",
     "raw-loader": "^0.5.1",
-    "rust-emscripten-loader": "0.0.1",
     "sass-loader": "^6.0.6",
     "scalajs-loader": "0.0.1",
     "style-loader": "^0.18.2",
     "webpack": "^3.0.0",
     "webpack-dev-server": "^2.5.0",
     "webpack-merge": "^4.0.0",
+    "webpack-synchronizable-shell-plugin": "0.0.6",
     "write-file-webpack-plugin": "^4.1.0"
   }
 }
