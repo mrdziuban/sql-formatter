@@ -1,0 +1,16 @@
+{
+    "name": "sql-formatter",
+    "set": "psc-0.11.7",
+    "source": "https://github.com/purescript/package-sets.git",
+    "depends": [
+        "arrays",
+        "dom",
+        "eff",
+        "foreign",
+        "integers",
+        "maybe",
+        "prelude",
+        "strings",
+        "test-unit"
+    ]
+}

@@ -124,10 +124,8 @@ module.exports = (env) => {
             output: path.join(__dirname, 'purescript', 'output'),
             psc: 'psa',
             pscArgs: { sourceMaps: !prod },
-            src: [
-              path.join(__dirname, 'bower_components', 'purescript-*', 'src', '**', '*.purs'),
-              path.join(__dirname, 'purescript', 'src', '**', '*.purs')
-            ]
+            pscPackage: true,
+            src: [path.join(__dirname, 'purescript', 'src', '**', '*.purs')]
           }
         },
         { test: /\.rb$/, loader: 'opal-rb-loader?includeOpal=false' },

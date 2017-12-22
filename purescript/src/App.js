@@ -1,13 +1,5 @@
 "use strict";
 
-exports.selectElement = function(el) {
-  return function(e) {
-    return function() {
-      return el.select();
-    };
-  };
-};
-
 exports.setInnerHTML = function(html) {
   return function(el) {
     return function() {
@@ -16,16 +8,13 @@ exports.setInnerHTML = function(html) {
   };
 };
 
-exports.getValue = function(el) {
-  return function() {
-    return el.value;
-  };
-};
-
-exports.setValue = function(el) {
-  return function(val) {
-    return function() {
-      el.value = val;
+exports.selectElement = function(el, e) { return function(e) { el.select(); }; };
+exports.getValue = function(el) { return el.value; };
+exports.setValue = function(el) { return function(val) { el.value = val; } };
+exports.addEventListener = function(event, callback, el) {
+  return function(callback) {
+    return function(el) {
+      el.addEventListener(event, callback);
     };
   };
 };
