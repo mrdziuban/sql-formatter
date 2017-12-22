@@ -34,6 +34,7 @@ describe(`SQL formatting using ${lang}`, () => {
 
   beforeEach(async () => {
     await setInput('');
+    await setInput(2, '#sql-spaces');
     await waitForOutput(true);
   });
 
@@ -42,13 +43,29 @@ describe(`SQL formatting using ${lang}`, () => {
   it('formats SQL correctly with 2 spaces', async () => {
     await setInput(input);
     const output = await waitForOutput(false);
-    assert.equal(expectedOutput(2), output);
+    assert.equal(output, expectedOutput(2));
   });
 
   it('formats SQL correctly with 4 spaces', async () => {
     await setInput(4, '#sql-spaces');
     await setInput(input);
     const output = await waitForOutput(false);
-    assert.equal(expectedOutput(4), output);
+    assert.equal(output, expectedOutput(4));
   });
+
+  const testSelection = event => async () => {
+    await page.$eval('#sql-output', el => el.blur());
+    await page.evaluate(() => window.getSelection().empty());
+    const selected1 = await page.evaluate(() => window.getSelection().toString());
+    assert.equal(selected1, '');
+
+    await setInput(input);
+    await waitForOutput(false);
+    await page[event]('#sql-output');
+    const selected2 = await page.evaluate(() => window.getSelection().toString());
+    assert.equal(selected2, expectedOutput(2));
+  };
+
+  it('selects SQL output on click', testSelection('click'));
+  it('selects SQL output on focus', testSelection('focus'));
 });

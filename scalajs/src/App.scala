@@ -2,7 +2,7 @@ package mrdziuban.sqlFormatter
 
 import org.scalajs.dom.document
 import org.scalajs.dom.html.{Input, TextArea}
-import org.scalajs.dom.raw.{Event, FocusEvent}
+import org.scalajs.dom.raw.Event
 
 object App {
   val defaultSpaces = 2
@@ -42,16 +42,13 @@ object App {
   private def updateOutput(input: TextArea, output: TextArea, spaces: Input): Event => Unit =
     (_: Event) => output.value = SQLFormatter.format(input.value, getSpaces(spaces))
 
-  private def selectOutput(output: TextArea): Event => Unit =
-    (_: Event) => {
-      output.dispatchEvent(new FocusEvent)
-      document.getSelection.selectAllChildren(output)
-    }
+  private def selectOutput(output: TextArea): Event => Unit = (_: Event) => output.select()
 
   private def bindEvents(input: TextArea, output: TextArea, spaces: Input): Unit = {
     input.addEventListener("input", updateOutput(input, output, spaces))
     spaces.addEventListener("input", updateOutput(input, output, spaces))
 
     output.addEventListener("click", selectOutput(output))
+    output.addEventListener("focus", selectOutput(output))
   }
 }

@@ -41,6 +41,7 @@ test/fable/out
 # PureScript
 .psci
 .psci_modules
+.psc-package
 purescript/output
 test/purescript/output
 

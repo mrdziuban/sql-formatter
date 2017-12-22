@@ -130,10 +130,15 @@ export PATH="$HOME/.phpunit/bin:$PATH"
 
 ### PureScript
 
-Install bower dependencies:
+Install psc-package and install dependencies:
 
 ```bash
-$(npm bin)/bower install
+export PSC_PACKAGE_VERSION=0.2.5
+mkdir -p "$HOME/.psc-package/$PSC_PACKAGE_VERSION"
+# Replace macos with linux64 if necessary
+curl -o- -sL https://github.com/purescript/psc-package/releases/download/v$PSC_PACKAGE_VERSION/macos.tar.gz | tar xzf - -C "$HOME/.psc-package/$PSC_PACKAGE_VERSION" --strip-components 1
+export PATH="$HOME/.psc-package/$PSC_PACKAGE_VERSION:$PATH"
+psc-package update
 ```
 
 ### Rust
