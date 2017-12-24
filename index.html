@@ -32,9 +32,10 @@
       </div>
     </footer>
     <script>
-      var langs = {"google":{"name":"Dart","link":"https://www.dartlang.org/","in":"dart"},"elixirscript":{"name":"ElixirScript","link":"https://github.com/elixirscript/elixirscript"},"elm":{"name":"Elm","link":"http://elm-lang.org/"},"es6":{"name":"ES6","link":"https://developer.mozilla.org/en-US/docs/Web/JavaScript/New_in_JavaScript/ECMAScript_2015_support_in_Mozilla"},"fable":{"name":"Fable","link":"http://fable.io/"},"gopherjs":{"name":"GopherJS","link":"https://github.com/gopherjs/gopherjs"},"opal":{"name":"Opal","link":"http://opalrb.org/"},"php":{"name":"PHP","link":"https://gitlab.com/kornelski/babel-preset-php"},"purescript":{"name":"PureScript","link":"http://www.purescript.org/"},"rust-asmjs":{"name":"Rust (asm.js)","link":"https://users.rust-lang.org/t/compiling-to-the-web-with-rust-and-emscripten/7627","in":"rust","index":"index-asmjs.js"},"rust-wasm":{"name":"Rust (WebAssembly)","link":"https://users.rust-lang.org/t/compiling-to-the-web-with-rust-and-emscripten/7627","in":"rust","index":"index-wasm.js"},"scalajs":{"name":"Scala.js","link":"http://www.scala-js.org/"}};
+      var langs = {"google":{"name":"Dart","link":"https://www.dartlang.org/","in":"dart"},"elixirscript":{"name":"ElixirScript","link":"https://github.com/elixirscript/elixirscript"},"elm":{"name":"Elm","link":"http://elm-lang.org/"},"es6":{"name":"ES6","link":"https://developer.mozilla.org/en-US/docs/Web/JavaScript/New_in_JavaScript/ECMAScript_2015_support_in_Mozilla"},"fable":{"name":"Fable","link":"http://fable.io/"},"gopherjs":{"name":"GopherJS","link":"https://github.com/gopherjs/gopherjs"},"opal":{"name":"Opal","link":"http://opalrb.org/"},"php":{"name":"PHP","link":"https://gitlab.com/kornelski/babel-preset-php"},"purescript":{"name":"PureScript","link":"http://www.purescript.org/"},"rust":{"name":"Rust","link":"https://www.hellorust.com/news/native-wasm-target.html"},"scalajs":{"name":"Scala.js","link":"http://www.scala-js.org/"}};
       var urlMatch = window.location.search.match(/lang=([^&]+)/);
-      var langsToPick = Object.keys(langs).filter(function(l) { return l !== 'rust-wasm'; });
+      var langKeys = Object.keys(langs);
+      var langsToPick = (langKeys.length === 1 && langKeys[0] === 'rust') ? langKeys : langKeys.filter(function(l) { return l !== 'rust'; });
       var lang = urlMatch && urlMatch[1] && langs[urlMatch[1].toLowerCase()]
         ? urlMatch[1].toLowerCase()
         : langsToPick[Math.floor(Math.random() * langsToPick.length)];
