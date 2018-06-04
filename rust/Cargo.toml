@@ -5,4 +5,5 @@ version = "0.1.0"
 
 [dependencies]
 regex = "~0.2"
-stdweb = { git = "https://github.com/koute/stdweb.git", rev = "9ba27f1c3" }
+stdweb = "~0.4"
+yew = "~0.4"

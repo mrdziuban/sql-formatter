@@ -13,9 +13,9 @@ struct T {
     deep: usize,
 }
 
-pub fn format(sql: String, num_spaces: i32) -> String {
-    let tab: String = iter::repeat(" ").take(num_spaces as usize).collect();
-    let split_by_quotes = regex_replace(&sql.replace("'", &format!("{}'", SEP)), r"\s+", "g", " ");
+pub fn format(sql: &String, num_spaces: &i64) -> String {
+    let tab: String = iter::repeat(" ").take(*num_spaces as usize).collect();
+    let split_by_quotes = regex_replace(&sql.replace("'", &format!("{}'", SEP)), r"\s+", " ");
     let split_by_quotes: Vec<&str> = split_by_quotes.split(SEP).collect();
     let mut acc = T {
         stri: String::from(""),
@@ -29,8 +29,8 @@ pub fn format(sql: String, num_spaces: i32) -> String {
     for (i, original_el) in acc.clone().arr.iter().enumerate() {
         let parens_level = subquery_level(original_el, &acc.parens_level) as usize;
         let mut arr = acc.arr.to_vec();
-        if regex_match(&original_el, r"SELECT|SET", "") {
-            arr[i] = regex_replace(&original_el, r",\s+", "g", &format!(",\n{}{}", acc.tab, acc.tab));
+        if regex_match(&original_el, r"SELECT|SET") {
+            arr[i] = regex_replace(&original_el, r",\s+", &format!(",\n{}{}", acc.tab, acc.tab));
         }
         let (stri, deep) = update_str(&arr[i], &parens_level, &acc);
 
@@ -44,12 +44,12 @@ pub fn format(sql: String, num_spaces: i32) -> String {
         };
     }
 
-    let out = regex_replace(&acc.stri, r"\s+\n", "g", "\n");
-    String::from(regex_replace(&out, r"\n+", "g", "\n").trim())
+    let out = regex_replace(&acc.stri, r"\s+\n", "\n");
+    String::from(regex_replace(&out, r"\n+", "\n").trim())
 }
 
 fn update_str(el: &str, parens_level: &usize, acc: &T) -> (String, usize) {
-    if regex_match(el, r"\(\s*SELECT", "") {
+    if regex_match(el, r"\(\s*SELECT") {
         (format!("{}{}{}", acc.stri, acc.shift_arr[acc.deep + 1], el), acc.deep + 1)
     } else {
         let stri = if el.contains("'") { format!("{}{}", acc.stri, el) } else { format!("{}{}{}", acc.stri, acc.shift_arr[acc.deep], el) };
@@ -78,53 +78,6 @@ fn subquery_level(stri: &str, parens_level: &usize) -> isize {
     *parens_level as isize - (String::from(stri).replace("(", "").len() as isize - String::from(stri).replace(")", "").len() as isize)
 }
 
-#[cfg(not(test))]
-fn all_replacements<'a>(tab: &str) -> Vec<(&'a str, String)> {
-    vec![
-        (r" AND ",              format!("{}{}AND ", SEP, tab)),
-        (r" BETWEEN ",          format!("{}{}BETWEEN ", SEP, tab)),
-        (r" CASE ",             format!("{}{}CASE ", SEP, tab)),
-        (r" ELSE ",             format!("{}{}ELSE ", SEP, tab)),
-        (r" END ",              format!("{}{}END ", SEP, tab)),
-        (r" FROM ",             format!("{}FROM ", SEP)),
-        (r" GROUP\s+BY ",       format!("{}GROUP BY ", SEP)),
-        (r" HAVING ",           format!("{}HAVING ", SEP)),
-        (r" IN ",               String::from(" IN ")),
-        (r" JOIN ",             format!("{}JOIN ", SEP)),
-        (r" CROSS(~::~)+JOIN ", format!("{}CROSS JOIN ", SEP)),
-        (r" INNER(~::~)+JOIN ", format!("{}INNER JOIN ", SEP)),
-        (r" LEFT(~::~)+JOIN ",  format!("{}LEFT JOIN ", SEP)),
-        (r" RIGHT(~::~)+JOIN ", format!("{}RIGHT JOIN ", SEP)),
-        (r" ON ",               format!("{}{}ON ", SEP, tab)),
-        (r" OR ",               format!("{}{}OR ", SEP, tab)),
-        (r" ORDER\s+BY ",       format!("{}ORDER BY ", SEP)),
-        (r" OVER ",             format!("{}{}OVER ", SEP, tab)),
-        (r"\(\s*SELECT ",       format!("{}(SELECT ", SEP)),
-        (r"\)\s*SELECT ",       format!("){}SELECT ", SEP)),
-        (r" THEN ",             format!(" THEN{}{}", SEP, tab)),
-        (r" UNION ",            format!("{}UNION{}", SEP, SEP)),
-        (r" USING ",            format!("{}USING ", SEP)),
-        (r" WHEN ",             format!("{}{}WHEN ", SEP, tab)),
-        (r" WHERE ",            format!("{}WHERE ", SEP)),
-        (r" WITH ",             format!("{}WITH ", SEP)),
-        (r" SET ",              format!("{}SET ", SEP)),
-        (r" ALL ",              String::from(" ALL ")),
-        (r" AS ",               String::from(" AS ")),
-        (r" ASC ",              String::from(" ASC ")),
-        (r" DESC ",             String::from(" DESC ")),
-        (r" DISTINCT ",         String::from(" DISTINCT ")),
-        (r" EXISTS ",           String::from(" EXISTS ")),
-        (r" NOT ",              String::from(" NOT ")),
-        (r" NULL ",             String::from(" NULL ")),
-        (r" LIKE ",             String::from(" LIKE ")),
-        (r"\s*SELECT ",         String::from("SELECT ")),
-        (r"\s*UPDATE ",         String::from("UPDATE ")),
-        (r"\s*DELETE ",         String::from("DELETE ")),
-        (r"(~::~)+",            String::from(SEP)),
-    ]
-}
-
-#[cfg(test)]
 fn all_replacements<'a>(tab: &str) -> Vec<(&'a str, String)> {
     vec![
         (r"(?i) AND ",              format!("{}{}AND ", SEP, tab)),
@@ -173,7 +126,7 @@ fn all_replacements<'a>(tab: &str) -> Vec<(&'a str, String)> {
 fn split_sql(stri: &str, tab: &str) -> Vec<String> {
     let mut s = String::from(stri);
     for r in all_replacements(tab) {
-        s = regex_replace(&s, &r.0, "gi", &r.1);
+        s = regex_replace(&s, &r.0, &r.1);
     }
     String::from(s).split(SEP).map(String::from).collect()
 }
@@ -192,7 +145,7 @@ mod tests {
             #[test]
             fn $name() {
                 let (input, expected, num_spaces) = $value;
-                assert_eq!(expected, format(String::from(input), num_spaces));
+                assert_eq!(expected, format(&String::from(input), &num_spaces));
             }
         )*
         }
