@@ -45,6 +45,11 @@ test/fable/out
 purescript/output
 test/purescript/output
 
+# Reason
+lib/*
+.merlin
+*.bs.js
+
 # Scala.js
 target
 lib_managed
