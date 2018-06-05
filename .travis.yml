@@ -98,7 +98,7 @@ install:
   # GopherJS
   - go get -u github.com/gopherjs/gopherjs
   # PureScript
-  - psc-package update
+  - psc-package install
   # Opal
   - bundle install --jobs=3 --retry=3 --deployment
 script:
@@ -107,5 +107,5 @@ env:
   global:
     - DART_VERSION=1.24.3
     - EXS_VERSION=56cb2c5
-    - PSC_PACKAGE_VERSION=0.2.5
+    - PSC_PACKAGE_VERSION=0.3.3
     - SBT_VERSION=1.0.4
