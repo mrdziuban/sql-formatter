@@ -26,7 +26,7 @@ describe(`SQL formatting using ${lang}`, () => {
 
   before(async function () {
     this.timeout(10000);
-    browser = await puppeteer.launch();
+    browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
     page = await browser.newPage();
     await page.goto(`http://localhost:8000/?lang=${lang}`);
     await page.waitForSelector('#sql-input');
