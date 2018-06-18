@@ -4,6 +4,6 @@ name = "sql-formatter"
 version = "0.1.0"
 
 [dependencies]
-regex = "~0.2"
+regex = "~1.0"
 stdweb = "~0.4"
 yew = "~0.4"
