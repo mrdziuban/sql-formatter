@@ -1,5 +1,27 @@
+const waitForOutput = cb => {
+  let interval;
+
+  const retry = () => {
+    const output = document.getElementById('sql-output');
+    if (!!output) {
+      cancelAnimationFrame(interval);
+      cb(output);
+    } else {
+      interval = requestAnimationFrame(retry);
+    }
+  };
+
+  interval = requestAnimationFrame(retry);
+};
+
 if (typeof WebAssembly === 'object') {
   require('./target/wasm32-unknown-unknown/release/sql-formatter');
+
+  waitForOutput(output => {
+    const selectOutput = () => document.getElementById('sql-output').select();
+    output.onclick = selectOutput;
+    output.onfocus = selectOutput;
+  });
 } else {
   document.getElementById('main').innerHTML =
     '<div class="container text-center">' +

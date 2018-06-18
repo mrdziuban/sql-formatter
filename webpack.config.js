@@ -156,7 +156,15 @@ module.exports = (env) => {
         template: path.join(__dirname, 'index.ejs')
       })
     ].concat(Object.keys(languages).includes('rust')
-      ? [new WebpackSynchronizableShellPlugin({ onBuildStart: { scripts: [`cd ${path.join(__dirname, 'rust')} && cargo-web build --target-webasm`], blocking: true }, safe: true })]
+      ? [
+          new WebpackSynchronizableShellPlugin({
+            onBuildStart: {
+              scripts: [`cd ${path.join(__dirname, 'rust')} && cargo web build --target wasm32-unknown-unknown`],
+              blocking: true
+            },
+            safe: true
+          })
+      ]
       : []),
     resolve: { extensions: ['.js', '.dart', '.ejs', '.elm', '.exjs', '.fsx', '.go', '.php', '.purs', '.rb', '.scala', '.scss'] }
   };
