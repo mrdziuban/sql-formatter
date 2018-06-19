@@ -13,7 +13,7 @@ let init = {
   spaces: 2
 };
 
-[@bs.deriving {accessors: accessors}]
+[@bs.deriving { accessors: accessors }]
 type msg =
   | Input(string)
   | Spaces(string)
@@ -21,9 +21,12 @@ type msg =
 
 let update = model =>
   fun
-  | Input(v) => {...model, input: v, output: SqlFormatter.format(v, model.spaces)}
-  | Spaces(v) => {...model, spaces: int_of_string(v), output: SqlFormatter.format(v, model.spaces)}
-  | Select => model;
+  | Input(v) => { ...model, input: v, output: SqlFormatter.format(v, model.spaces) }
+  | Spaces(v) => { ...model, spaces: int_of_string(v), output: SqlFormatter.format(model.input, int_of_string(v)) }
+  | Select => {
+      ignore([%raw "document.getElementById(\"sql-output\").select()"]);
+      model
+    };
 
 let view = model =>
   div(
@@ -70,7 +73,9 @@ let view = model =>
               id("sql-output"),
               class'("form-control code"),
               Vdom.prop("rows", "20"),
-              Vdom.prop("readonly", "readonly")
+              Vdom.prop("readOnly", "true"),
+              onClick(Select),
+              onFocus(Select)
             ],
             [text(model.output)]
           )
@@ -79,4 +84,4 @@ let view = model =>
     ]
   );
 
-let main = beginnerProgram({model: init, update, view});
+let main = beginnerProgram({ model: init, update, view });

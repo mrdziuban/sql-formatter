@@ -109,7 +109,7 @@ let format = (sql: string, numSpaces: int) => {
       };
       let el = Array.get(acc.arr, i);
       let (str, deep) = updateOutput(el, parensLevel, acc);
-      {...input, str, arr: acc.arr, parensLevel, deep};
+      { ...input, str, arr: acc.arr, parensLevel, deep };
     },
     input,
     Array.of_list(range(0, Array.length(input.arr) - 1)));

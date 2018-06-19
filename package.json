@@ -17,6 +17,7 @@
     "url": "git://github.com/mrdziuban/sql-formatter"
   },
   "devDependencies": {
+    "@glennsl/bs-jest": "^0.4.2",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-object-assign": "^6.22.0",

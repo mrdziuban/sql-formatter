@@ -49,6 +49,7 @@ test/purescript/output
 lib/*
 .merlin
 *.bs.js
+test/reason/lib/*
 
 # Scala.js
 target

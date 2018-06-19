@@ -43,29 +43,34 @@ describe(`SQL formatting using ${lang}`, () => {
   it('formats SQL correctly with 2 spaces', async () => {
     await setInput(input);
     const output = await waitForOutput(false);
-    assert.equal(output, expectedOutput(2));
+    assert.strictEqual(output, expectedOutput(2));
   });
 
   it('formats SQL correctly with 4 spaces', async () => {
     await setInput(4, '#sql-spaces');
     await setInput(input);
     const output = await waitForOutput(false);
-    assert.equal(output, expectedOutput(4));
+    assert.strictEqual(output, expectedOutput(4));
   });
 
   const testSelection = event => async () => {
     await page.$eval('#sql-output', el => el.blur());
     await page.evaluate(() => window.getSelection().empty());
     const selected1 = await page.evaluate(() => window.getSelection().toString());
-    assert.equal(selected1, '');
+    assert.strictEqual(selected1, '');
 
     await setInput(input);
     await waitForOutput(false);
     await page[event]('#sql-output');
     const selected2 = await page.evaluate(() => window.getSelection().toString());
-    assert.equal(selected2, expectedOutput(2));
+    assert.strictEqual(selected2, expectedOutput(2));
   };
 
   it('selects SQL output on click', testSelection('click'));
   it('selects SQL output on focus', testSelection('focus'));
+
+  it('sets SQL output to be readonly', async () => {
+    const readonly = await page.evaluate("document.getElementById('sql-output').readOnly;");
+    assert.strictEqual(readonly, true);
+  });
 });
