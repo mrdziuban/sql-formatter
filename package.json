@@ -17,12 +17,15 @@
     "url": "git://github.com/mrdziuban/sql-formatter"
   },
   "devDependencies": {
+    "@glennsl/bs-jest": "^0.4.2",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-object-assign": "^6.22.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-php": "git+https://gitlab.com/mrdziuban/babel-preset-php.git#updates",
+    "bs-platform": "~3.1.5",
+    "bucklescript-tea": "^0.7.2",
     "clean-webpack-plugin": "^0.1.17",
     "copy-webpack-plugin": "^4.3.0",
     "css-loader": "^0.28.7",

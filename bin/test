@@ -62,6 +62,7 @@ if [ "$TRAVIS" == 'true' ]; then
 else
   runTests 'PureScript' $npm_bin/pulp run -I purescript/src --src-path test/purescript -o test/purescript/output -m 'Test.Main'
 fi
+runTests 'Reason' /bin/bash -c $npm_bin'/bsb -make-world && '$npm_bin'/jest test/reason'
 runTests 'Rust' /bin/bash -c 'cd '$root_dir'/rust && cargo test --no-fail-fast --color always'
 runTests 'Scala.js' sbt clean test
 
@@ -92,6 +93,7 @@ runIntegrationTests 'GopherJS'
 runIntegrationTests 'Opal'
 runIntegrationTests 'PHP'
 runIntegrationTests 'PureScript'
+runIntegrationTests 'Reason'
 runIntegrationTests 'Rust'
 runIntegrationTests 'ScalaJS'
 

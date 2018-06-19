@@ -46,6 +46,10 @@ const _languages = {
     name: 'PureScript',
     link: 'http://www.purescript.org/'
   },
+  reason: {
+    name: 'Reason',
+    link: 'https://reasonml.github.io/en/'
+  },
   rust: {
     name: 'Rust',
     link: 'https://www.hellorust.com/news/native-wasm-target.html'
@@ -155,7 +159,18 @@ module.exports = (env) => {
         filename: path.join(__dirname, 'dist', 'index.html'),
         template: path.join(__dirname, 'index.ejs')
       })
-    ].concat(Object.keys(languages).includes('rust')
+    ].concat(Object.keys(languages).includes('reason')
+      ? [
+          new WebpackSynchronizableShellPlugin({
+            onBuildStart: {
+              scripts: [`${path.join(__dirname, 'node_modules', '.bin', 'bsb')} -make-world`],
+              blocking: true
+            },
+            safe: true
+          })
+      ]
+      : [])
+    .concat(Object.keys(languages).includes('rust')
       ? [
           new WebpackSynchronizableShellPlugin({
             onBuildStart: {
