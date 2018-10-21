@@ -63,7 +63,7 @@ before_install:
   - export PATH="$HOME/.elixirscript/$EXS_VERSION/dist/elixirscript/bin:$PATH"
   # GopherJS
   - mkdir -p "$HOME/.go"
-  - curl -o- -sL https://storage.googleapis.com/golang/go1.10.2.linux-amd64.tar.gz | tar xzf - -C "$HOME/.go"
+  - curl -o- -sL https://storage.googleapis.com/golang/go1.11.1.linux-amd64.tar.gz | tar xzf - -C "$HOME/.go"
   - export GOROOT="$HOME/.go/go"
   - export PATH="$GOROOT/bin:$HOME/go/bin:$PATH"
   # PHP
